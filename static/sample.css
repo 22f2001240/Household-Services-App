@@ -1,0 +1,49 @@
+
+
+/* Text box styling */
+.text-box {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #41960c, #032649);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(38, 8, 206, 0.1);
+    text-align: center;
+    max-width: 600px;
+}
+
+/* Image Circle Layout */
+.image-circle-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+.center-image {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 140px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.surrounding-image {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.image-1 { top: 15%; left: 30%; transform: translate(-50%, -50%); }
+.image-2 { top: 75%; right: 5%; transform: translate(50%, -50%); }
+.image-3 { bottom: 0; left: 45%; transform: translate(-50%, 50%); }
+.image-4 { top: 65%; left: 0; transform: translate(-50%, -50%); }
+.image-5 { top: 15%; right: 0%; }
+
+/* Center alignment for button */
+.center {
+    text-align: center;
+    color: rgb(5,5,110);
+    font-size: large;
+}

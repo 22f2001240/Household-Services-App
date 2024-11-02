@@ -1,0 +1,100 @@
+
+.bg{
+    height: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg,#b882d7, #d7dad7 );
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.signup-form {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.signup-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+
+.center{
+    text-align: center;
+    margin: auto;
+    color: rgb(28, 100, 42);
+    font-size: large;
+}
+
+.login-container {
+    max-width: 800px;
+    width: 100%;
+    padding: 90px;
+    border-radius: 10px;
+    background: #ebe5e5;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Text box styling */
+.text-box {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg,#74af6f, #a0c89f );
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(38, 8, 206, 0.1);
+    text-align: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Text color and font size */
+.text-box h2 {
+    font-size: 2em;         /* Adjust as needed */
+    color: #161709;            /* Dark color for main heading */
+    font-weight: bold;      /* Make heading bold */
+}
+
+.text-box p {
+    font-size: 1.1em;       /* Slightly larger paragraph text */
+    color: #3a0404;            /* Medium color for paragraph text */
+    line-height: 1.6;       /* Increase line spacing for readability */
+}
+
+/* Center and surrounding images */
+.image-circle-container {
+    position: relative;
+    width: 300px; /* Adjust based on desired size */
+    height: 300px;
+    margin: 0 auto;
+}
+.center-image {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 140px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.surrounding-image {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+/* Position each surrounding image in a circular layout */
+.image-1 { top: 15%; left: 30%; transform: translate(-50%, -50%); }
+.image-2 { top: 75%; right: 5%; transform: translate(50%, -50%); }
+.image-3 { bottom: 0; left: 45%; transform: translate(-50%, 50%); }
+.image-4 { top: 65%; left: 0; transform: translate(-50%, -50%); }
+.image-5 { top: 15%; right:0%; }
