@@ -1,21 +1,64 @@
 
+/* Box styling */
+.container-box {
+    padding: 20px;
+    background-color: #e9eef2; /* Light grey background */
+    border: 2px solid #bc9c9c; /* Light grey border */
+    border-radius: 10px;
+    margin-top: 30px;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-bottom: 30px;
+}
+
+/* Box styling 2 */
+.container-box2 {
+    padding: 20px;
+    background-color: #e9eef2; /* Light grey background */
+    border: 2px solid #bc9c9c; /* Light grey border */
+    border-radius: 10px;
+    margin-top: 150px;
+    margin-left: 150px;
+    margin-right: 150px;
+    margin-bottom: 50px;
+}
+
+/* Hide all sections by default */
+.content-section {
+    display: none;
+}
+
+/* Show only the targeted section */
+.content-section:target {
+    display: block;
+}
+
+/* Display the Home section by default if no target is set */
+body:not(:has(:target)) #home {
+    display: block;
+}
+
+
 .bg{
+    background: linear-gradient(135deg,#b882d7, #d7dad7 );
     height: 100%;
-    margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.bg2{
     background: linear-gradient(135deg,#b882d7, #d7dad7 );
-    margin-left: auto;
-    margin-right: auto;
-    
+    height: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 .signup-form {
     max-width: 500px;
     margin: 50px auto;
     padding: 20px;
-    background-color: #fff;
+    background-color:#f6f1f1;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -38,7 +81,7 @@
     width: 100%;
     padding: 90px;
     border-radius: 10px;
-    background: #ebe5e5;
+    background: #fcecf8;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 

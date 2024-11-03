@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to My App</title>
+        <link rel="stylesheet" href="C:\Users\NIHI SHABEEB\Desktop\IIT M\Term 5\MAD1 Project\House Service\Household-Services-App\static\style.css">
+        <link rel="stylesheet" href="C:\Users\NIHI SHABEEB\Desktop\IIT M\Term 5\MAD1 Project\House Service\Household-Services-App\static\styles\dropdown.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    </head>
+    <body>
+
+<!-- Full-width navbar with light pink background and bold black buttons -->
+        <div class="container-fluid" style="background-color: #ffcccb; padding: 10px;">
+            <nav class="navbar navbar-expand-lg navbar-light w-100">
+                <div class="container-fluid">
+                    <a class="navbar-brand text-dark" href="#"><strong>Welcome to Admin</strong></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#home">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#search">Search</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#summary">Summary</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="customer_login.html">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Content Sections -->
+        <div id="home" class="content-section">
+            <div class="container-box">
+                <h2>Services</h2>
+                <table class="table table-dark table-striped" style="text-align: center;">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Service Name</th>
+                            <th scope="col">Base Price</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row"><a href="#">service id</a></th>
+                            <td>----</td>
+                            <td>----</td>
+                            <td>
+                                <button type="button" class="badge bg-primary">Edit</button>
+                                <button type="button" class="badge bg-danger">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="display: flex; justify-content: right;">
+                    <a href="new_service.html" class="badge bg-dark">+ New Service</a> <!--new page opened (new_service.html) for entering the new service details-->
+                </div>
+                
+            </div>
+            <div class="container-box">
+                <h2>Professionals</h2>
+                <table class="table table-dark table-striped" style="text-align: center;">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Experience(Years)</th>
+                            <th scope="col">Service Name</th>
+                            <th scope="col" >Action</th>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row"><a href="#">id</a></th>
+                            <td>----</td>
+                            <td>----</td>
+                            <td>----</td>
+                            <td>
+                                <button type="button" class="badge bg-success">Approve</button>
+                                <button type="button" class="badge bg-danger">Reject</button>
+                                <button type="button" class="badge bg-light text-dark">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="container-box">
+                <h2>Service Requests</h2>
+                <table class="table table-dark table-striped" style="text-align: center;">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Assigned Professional</th>
+                            <th scope="col">Requested Data</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>----</td>
+                            <td>----</td>
+                            <td>----</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+<!-- For search page -->
+        <div id="search" class="content-section" style="position: relative;">
+            <!-- Container for Search by text, dropdown, and search box -->
+            <div class="search-container">
+                <!-- "Search by" Label -->
+                <span class="search-label">Search by</span>
+
+                <!-- Dropdown functionality -->
+                <input type="checkbox" class="dropdown-toggle-checkbox" id="dropdownToggle" >
+                <label for="dropdownToggle" class="dropdown-label">Category</label>
+                <div class="dropdown-menu" >
+                    <a class="dropdown-item" href="#">Service</a>
+                    <a class="dropdown-item" href="#">Customer</a>
+                    <a class="dropdown-item" href="#">Professional</a>
+                    <a class="dropdown-item" href="#">Service Request</a>
+                    <!-- <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Separated link</a> -->
+                </div>
+                <!-- Search input box -->
+                <input type="text" class="search-input" placeholder="Search...">
+            </div>
+        </div>
+
+<!-- for summary statistical charts -->
+        <div id="summary" class="content-section">
+            <h1>Overall Customer Ratings</h1>
+            <img src="{{ url_for('pie_chart') }}" alt="Pie Chart">
+            <h1>Service Request Summary</h1>
+            <img src="{{ url_for('bar_chart') }}" alt="Pie Chart">
+        </div>
+    </body>
+</html>
+

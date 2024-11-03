@@ -11,7 +11,7 @@
     <body class="bg2">
 
         <div class="signup-form">
-            <h2>Customer Sign Up</h2>
+            <h2>Servie Professional Sign Up</h2>
             <form action="#" method="post">
 
                 <!-- Email Input -->
@@ -30,13 +30,6 @@
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
-
-                <!-- Confirm Password Input -->
-                <div class="mb-3">
-                    <label for="confirm_password" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-                </div>
-
                 <!-- Phone Number Input -->
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone Number</label>
@@ -47,16 +40,32 @@
                     <label for="address" class="form-label">Address</label>
                     <textarea class="form-control" id="address" name="address" rows="3" placeholder="Enter your full address"></textarea>
                 </div>
+                <!-- Service Dropdown Menu -->
+                <div class="mb-3">
+                    <label for="service" class="form-label">Select Services</label>
+                    <select class="form-select" id="service" name="service" required>
+                        <option value="">Choose a service...</option>
+                        <option value="deep_cleaning">Deep Cleaning</option>
+                        <option value="carpentry">Carpentry Works</option>
+                        <option value="plumbing">Plumbing</option>
+                        <option value="electrical">Electrical Work</option>
+                        <option value="construction">Construction-Related Works</option>
+                    </select>
+                </div>
+                <!-- File Upload Input -->
+                <div class="mb-3">
+                    <label for="fileUpload" class="form-label">Attach Document (e.g., ID proof, service-related document)</label>
+                    <input type="file" class="form-control" id="fileUpload" name="fileUpload">
+                </div>
                 <div class="mb-3">
                     <label for="pincode" class="form-label">Pin Code</label>
                     <input type="number" class="form-control" id="pincode" name="pincode">
                 </div>
-
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary w-100">Sign Up</button>
             </form>
             
-            <p class="text-center mt-3">Already have an account? <a href="/login">Log in</a></p>
+            <p class="text-center mt-3">Already have an account? <a href="#">Log in</a></p>
         </div>
     </body>
 </html>
