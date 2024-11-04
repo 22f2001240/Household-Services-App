@@ -1,3 +1,9 @@
+.center2{
+    text-align: center;
+    margin: auto;
+    color: rgb(0, 0, 0);
+    font-size: 50px;
+}
 
 /* Box styling */
 .container-box {

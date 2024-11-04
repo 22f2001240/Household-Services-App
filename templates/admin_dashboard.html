@@ -3,13 +3,12 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Welcome to My App</title>
-        <link rel="stylesheet" href="C:\Users\NIHI SHABEEB\Desktop\IIT M\Term 5\MAD1 Project\House Service\Household-Services-App\static\style.css">
-        <link rel="stylesheet" href="C:\Users\NIHI SHABEEB\Desktop\IIT M\Term 5\MAD1 Project\House Service\Household-Services-App\static\styles\dropdown.css">
+        <title>Admin Dashboard</title>
+        <link rel="stylesheet" href="static\styles\style.css">
+        <link rel="stylesheet" href="static\styles\dropdown.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     </head>
     <body>
-
 <!-- Full-width navbar with light pink background and bold black buttons -->
         <div class="container-fluid" style="background-color: #ffcccb; padding: 10px;">
             <nav class="navbar navbar-expand-lg navbar-light w-100">
@@ -30,7 +29,7 @@
                                 <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#summary">Summary</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="customer_login.html">Logout</a>
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="index.html">Logout</a>
                             </li>
                         </ul>
                     </div>
@@ -129,7 +128,7 @@
 
                 <!-- Dropdown functionality -->
                 <input type="checkbox" class="dropdown-toggle-checkbox" id="dropdownToggle" >
-                <label for="dropdownToggle" class="dropdown-label">Category</label>
+                <label for="dropdownToggle" class="dropdown-label">Service Request</label>
                 <div class="dropdown-menu" >
                     <a class="dropdown-item" href="#">Service</a>
                     <a class="dropdown-item" href="#">Customer</a>
@@ -139,6 +138,7 @@
                     <a class="dropdown-item" href="#">Separated link</a> -->
                 </div>
                 <!-- Search input box -->
+                <!--if we choose service request then search by its status, closed | requested | accepted and list out all the service request for that status -->
                 <input type="text" class="search-input" placeholder="Search...">
             </div>
         </div>
@@ -146,9 +146,7 @@
 <!-- for summary statistical charts -->
         <div id="summary" class="content-section">
             <h1>Overall Customer Ratings</h1>
-            <img src="{{ url_for('pie_chart') }}" alt="Pie Chart">
             <h1>Service Request Summary</h1>
-            <img src="{{ url_for('bar_chart') }}" alt="Pie Chart">
         </div>
     </body>
 </html>
