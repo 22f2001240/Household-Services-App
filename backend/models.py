@@ -13,6 +13,7 @@ class Customer_Info(db.Model):
     role=db.Column(db.Integer,default=1) #for customer its 1 . for admin its 0 
     address=db.Column(db.String,nullable=False)
     pin_code=db.Column(db.Integer,nullable=False)
+    blocked_status=db.Column(db.Integer,default=0) #not blocked=0, 1-blocked
     service_requests=db.relationship("Service_Request",cascade="all,delete",backref="customer_info",lazy=True)
 
 
@@ -24,11 +25,14 @@ class Professional_Info(db.Model):
     password=db.Column(db.String,nullable=False)
     full_name=db.Column(db.String,nullable=False)
     experience=db.Column(db.Integer,nullable=False)
-    proof_doc=db.Column(db.LargeBinary,nullable=False)
+    proof_doc=db.Column(db.String,nullable=False)
     address=db.Column(db.String,nullable=False)
     pin_code=db.Column(db.Integer,nullable=False)
     service_id=db.Column(db.Integer,db.ForeignKey("service.id"))
     rating=db.Column(db.Integer,default=0)
+    price=db.Column(db.Integer,nullable=True)
+    profile_status=db.Column(db.Integer,default=0) #not accepted yet=0 ,accepted=1
+    blocked_status=db.Column(db.Integer,default=0) #not blocked=0, 1-blocked
     service_requests=db.relationship("Service_Request",cascade="all,delete",backref="professional_info",lazy=True)
 
 # Entity 3 - Service table
@@ -48,7 +52,7 @@ class Service_Request(db.Model):
     service_id=db.Column(db.Integer,db.ForeignKey("service.id"),nullable=False)
     customer_id=db.Column(db.Integer,db.ForeignKey("customer_info.id"),nullable=False)
     professional_id=db.Column(db.Integer,db.ForeignKey("professional_info.id"),nullable=False)
-    date_of_request=db.Column(db.DateTime,nullable=False)
-    date_of_completion=db.Column(db.DateTime,nullable=False)
+    date_of_request=db.Column(db.DateTime,nullable=True)
+    date_of_completion=db.Column(db.Date,nullable=True)
     service_status=db.Column(db.String,nullable=False) #only requested,assigned or closed
     remarks=db.Column(db.String,nullable=True)

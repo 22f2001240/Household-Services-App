@@ -1,4 +1,4 @@
-from flask import Flask,render_template
+from flask import Flask
 from backend.models import db
 
 app=None
@@ -6,6 +6,7 @@ app=None
 def setup_app():
     app=Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"]="sqlite:///house_service.sqlite3"
+    app.config['UPLOAD_FOLDER'] = 'static/proofs'
     db.init_app(app)
     app.app_context().push()
     app.debug=True

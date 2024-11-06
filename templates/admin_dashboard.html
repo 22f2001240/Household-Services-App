@@ -37,8 +37,10 @@
             </nav>
         </div>
 
-        <!-- Content Sections -->
+<!-- For home tab -->
+
         <div id="home" class="content-section">
+        <!-- Service table -->
             <div class="container-box">
                 <h2>Services</h2>
                 <table class="table table-dark table-striped" style="text-align: center;">
@@ -51,22 +53,25 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for service in service_list %}
                         <tr>
-                            <th scope="row"><a href="#">service id</a></th>
-                            <td>----</td>
-                            <td>----</td>
+                            <th scope="row"><a href="/service_request/{{service.id}}">{{service.id}}</a></th>
+                            <td>{{service.name}}</td>
+                            <td>{{service.basic_price}}</td>
                             <td>
-                                <button type="button" class="badge bg-primary">Edit</button>
-                                <button type="button" class="badge bg-danger">Delete</button>
+                                <a href="/edit_service/{{service.id}}" type="button" class="badge bg-primary">Edit</a>
+                                <a href="/delete_service/{{service.id}}" type="button" class="badge bg-danger">Delete</a>
                             </td>
                         </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
                 <div style="display: flex; justify-content: right;">
-                    <a href="new_service.html" class="badge bg-dark">+ New Service</a> <!--new page opened (new_service.html) for entering the new service details-->
+                    <a href="/add_service" class="badge bg-dark">+ New Service</a> <!--new page opened (new_service.html) for entering the new service details-->
                 </div>
-                
             </div>
+        <!-- professional table -->
+            {% if prof_list != [] %}
             <div class="container-box">
                 <h2>Professionals</h2>
                 <table class="table table-dark table-striped" style="text-align: center;">
@@ -74,72 +79,92 @@
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
+                            <th scope="col">Email-ID</th>
                             <th scope="col">Experience(Years)</th>
+                            <th scope="col">Service Name</th>
                             <th scope="col">Service Name</th>
                             <th scope="col" >Action</th>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row"><a href="#">id</a></th>
-                            <td>----</td>
-                            <td>----</td>
-                            <td>----</td>
-                            <td>
-                                <button type="button" class="badge bg-success">Approve</button>
-                                <button type="button" class="badge bg-danger">Reject</button>
-                                <button type="button" class="badge bg-light text-dark">Delete</button>
-                            </td>
-                        </tr>
+                        {% for prof in prof_list %}
+                            <tr>
+                                <th scope="row"><a href="{{url_for('professional',prof_id=prof.id)}}">{{prof.id}} </a></th>
+                                <td>{{prof.full_name}}</td>
+                                <td>{{prof.email_id}}</td>
+                                <td>{{prof.experience}}</td>
+                                <td>{{service_dict[prof.service_id].name}}</td>
+                                <td><a href="/display_file/{{prof.proof_doc}}">{{prof.proof_doc}}</a></td>
+                                {% if prof.profile_status == 0 and prof.blocked_status == 0 %}
+                                <td>
+                                    <a type="button" href="{{ url_for('approve_prof',prof_id=prof.id) }}" class="badge bg-success">Approve</a>
+                                    <a type="button" href="{{ url_for('reject_prof',prof_id=prof.id) }}" class="badge bg-danger">Reject</a>
+                                    <a type="button" href="{{ url_for('block_prof',prof_id=prof.id) }}" class="badge bg-light text-dark">Block</a>
+                                </td>
+                                 
+                                {% elif prof.profile_status == 1 and prof.blocked_status == 0 %}
+                                <td>
+                                    <a type="button" href="{{ url_for('block_prof',prof_id=prof.id) }}" class="badge bg-light text-dark">Block</a>
+                                </td>
+                                {% else %}
+                                <td>Blocked Person</td> 
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
-            <div class="container-box">
-                <h2>Service Requests</h2>
-                <table class="table table-dark table-striped" style="text-align: center;">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Assigned Professional</th>
-                            <th scope="col">Requested Data</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>----</td>
-                            <td>----</td>
-                            <td>----</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            {% else %}
+                <div class="container-box">
+                    <h2>Professionals</h2>
+                    <table class="table table-dark table-striped" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email-ID</th>
+                                <th scope="col">Experience(Years)</th>
+                                <th scope="col">Service Name</th>
+                                <th scope="col" >Action</th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                <tr>
+                                    <th scope="row"><a href="#">---</a></th>
+                                    <td>---</td>
+                                    <td>---</td>
+                                    <td>---</td>
+                                    <td>---</td>
+                                    <td>---</td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
         </div>
 
 
-<!-- For search page -->
+<!-- For search tab -->
         <div id="search" class="content-section" style="position: relative;">
-            <!-- Container for Search by text, dropdown, and search box -->
             <div class="search-container">
-                <!-- "Search by" Label -->
-                <span class="search-label">Search by</span>
-
-                <!-- Dropdown functionality -->
                 <input type="checkbox" class="dropdown-toggle-checkbox" id="dropdownToggle" >
                 <label for="dropdownToggle" class="dropdown-label">Service Request</label>
                 <div class="dropdown-menu" >
-                    <a class="dropdown-item" href="#">Service</a>
-                    <a class="dropdown-item" href="#">Customer</a>
-                    <a class="dropdown-item" href="#">Professional</a>
-                    <a class="dropdown-item" href="#">Service Request</a>
-                    <!-- <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Separated link</a> -->
+                    <a class="dropdown-item" href="{{url_for('services_search')}}">Services</a>
+                    <a class="dropdown-item" href="#">Customers</a>
+                    <a class="dropdown-item" href="#">Professionals</a>
+                    <a class="dropdown-item" href="#">Service Requests</a>
                 </div>
-                <!-- Search input box -->
-                <!--if we choose service request then search by its status, closed | requested | accepted and list out all the service request for that status -->
-                <input type="text" class="search-input" placeholder="Search...">
+                <nav class="navbar bg-body-tertiary">
+                    <div class="container-fluid">
+                      <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                      </form>
+                    </div>
+                  </nav>
             </div>
         </div>
 
