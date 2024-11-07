@@ -4,9 +4,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>professional dashboard</title>
-        <link rel="stylesheet" href="static\styles\style.css">
-        <link rel="stylesheet" href="static\styles\dropdown.css">
-        <link rel="stylesheet" href="static\styles\rating.css">
+        <link rel="stylesheet" href="/static\styles\style.css">
+        <link rel="stylesheet" href="/static\styles\dropdown.css">
+        <link rel="stylesheet" href="/static\styles\rating.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     </head>
     <body>
@@ -15,7 +15,7 @@
         <div class="container-fluid" style="background-color: #ffcccb; padding: 10px;">
             <nav class="navbar navbar-expand-lg navbar-light w-100">
                 <div class="container-fluid">
-                    <a class="navbar-brand text-dark" href="#"><strong>Welcome {{name}}</strong></a>
+                    <div style="font-size: 22px;"><strong>Welcome {{prof_obj.full_name}}</strong></div>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -25,7 +25,7 @@
                                 <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#home">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#search">Search</a>
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('search_tab_prof',prof_id=prof_obj.id)}}">Search</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#summary">Summary</a>
@@ -39,13 +39,12 @@
             </nav>
         </div>
 
-        <!-- Content Sections -->
         <div id="home" class="content-section">
             <div style="display: flex; justify-content: right;margin-top: 30px;font-size: 25px;margin-right: 30px;">
-                <a href="professional_profile.html" class="badge bg-dark">Profile</a>
+                <a href="{{url_for('prof_profile',prof_id=prof_obj.id)}}" class="badge bg-dark">Profile</a>
             </div>
             <div class="container-box">
-                <h2>Today Services</h2>
+                <h2>Pending Services Requests</h2>
                 <table class="table table-dark table-striped" style="text-align: center;">
                     <thead>
                         <tr>
@@ -57,16 +56,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <td>----</td>
-                            <td>----</td>
-                            <td>----</td>
-                            <td>
-                                <button type="button" class="badge bg-success">Accept</button>
-                                <button type="button" class="badge bg-danger">Reject</button>
-                            </td>
-                        </tr>
+                        {% if req_list != [] %}
+                            {% for req in req_list %}
+                                {% set cust=cust_dict[req.customer_id] %}
+                                <tr>
+                                    <th scope="col">{{cust.id}}</th>
+                                    <td>{{cust.full_name}}</td>
+                                    <td>{{cust.phone_number}}</td>
+                                    <td>{{cust.address}},{{cust.pin_code}}</td>
+                                    <td>
+                                        <a href="{{url_for('accept_req',req_id=req.id,prof_id=prof_obj.id)}}" type="button" class="badge bg-success">Accept</a>
+                                        <a href="{{url_for('reject_req',req_id=req.id,prof_id=prof_obj.id)}}" class="badge bg-danger">Reject</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>----</td>
+                                <td>----</td>
+                                <td>----</td>
+                                <td>----</td>
+                                <td>----</td>
+                                
+                            </tr>   
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
@@ -85,41 +98,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row"><a href="#">id</a></th>
-                            <td>----</td>
-                            <td>----</td>
-                            <td>----</td>
-                            <td>----</td>
-                            <td>----</td>
-                        </tr>
+                        {% if closedreq_list != [] %}
+                            {% for req in closedreq_list %}
+                                {% set cust=cust_dict[req.customer_id] %}
+                                <tr>
+                                    <th scope="col">{{cust.id}}</th>
+                                    <td>{{cust.full_name}}</td>
+                                    <td>{{cust.phone_number}}</td>
+                                    <td>{{cust.address}},{{cust.pin_code}}</td>
+                                    <td>fill date later</td>
+                                    <td>fill rating later</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>----</td>
+                                <td>----</td>
+                                <td>----</td>
+                                <td>----</td>
+                                <td>----</td>
+                                <td>----</td>
+                            </tr>   
+                        {% endif %}
                     </tbody>
                 </table>
-            </div>
-        </div>
-
-
-<!-- For search page -->
-        <div id="search" class="content-section" style="position: relative;">
-            <!-- Container for Search by text, dropdown, and search box -->
-            <div class="search-container">
-                <!-- "Search by" Label -->
-                <span class="search-label">Search by</span>
-
-                <!-- Dropdown functionality -->
-                <input type="checkbox" class="dropdown-toggle-checkbox" id="dropdownToggle" >
-                <label for="dropdownToggle" class="dropdown-label">Date</label>
-                <div class="dropdown-menu" >
-                    <a class="dropdown-item" href="#">Date</a>
-                    <a class="dropdown-item" href="#">Location</a>
-                    <a class="dropdown-item" href="#">Pin Code</a>
-                    <a class="dropdown-item" href="#">Service</a>
-                    <!-- <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Separated link</a> -->
-                </div>
-                <!-- Search input box -->
-                <!--if we choose date wise then enter a date here -->
-                <input type="text" class="search-input" placeholder="Search..."> 
             </div>
         </div>
 

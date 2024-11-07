@@ -4,8 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>service remark</title>
-        <link rel="stylesheet" href="static\styles\style.css">
-        <link rel="stylesheet" href="static\styles\rating.css">
+        <link rel="stylesheet" href="/static\styles\style.css">
+        <link rel="stylesheet" href="/static\styles\rating.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     </head>
@@ -15,52 +15,54 @@
             <nav class="navbar navbar-expand-lg navbar-light w-100">
             </nav>
         </div>
-        <div class="container-box" style="background-color: rgb(221, 218, 218);">
+        <div class="container-box" style="background-color: rgb(240, 235, 235);">
             <div class="center2">
-                <h2>Service Remark</h2>
-                <h5>Request ID:request id here </h5>
+                <h2 style="text-align: center;">Service Remark</h2>
+                <h5>Request ID: {{req_obj.id}} </h5>
             </div><br><br>
             <div class="container">
                 <div class="row row-cols-2 row-cols-lg-3 g-2 g-lg-3">
                   <div class="col">
-                    <div class="p-3 border bg-light">Service Name here</div>
+                    <div class="p-3 border bg-light">{{serv_dict[req_obj.service_id].name}}</div>
                   </div>
                   <div class="col">
-                    <div class="p-3 border bg-light">Description here</div>
+                    <div class="p-3 border bg-light">{{serv_dict[req_obj.service_id].Description}}</div>
                   </div>
                   <div class="col">
-                    <div class="p-3 border bg-light">Date here</div>
+                    <div class="p-3 border bg-light">{{req_obj.date_of_request.strftime('%Y-%m-%d')}}</div>
                   </div>
                   <div class="col">
-                    <div class="p-3 border bg-light">professional id here</div>
+                    <div class="p-3 border bg-light">{{prof_dict[req_obj.professional_id].full_name}}</div>
                   </div>
                   <div class="col">
-                    <div class="p-3 border bg-light">professional name here</div>
+                    <div class="p-3 border bg-light">{{prof_dict[req_obj.professional_id].email_id}}</div>
                   </div>
                   <div class="col">
                     <div class="p-3 border bg-light">contact number here</div>
                   </div>
                 </div>
             </div><br><br>
-            <div class="star-rating" style="align-items: center;margin-left: 300px;">
-                <span style="font-size: 20px;color: black;font-weight: bold;">Service rating : </span>
-                <input type="radio" id="star5" name="rating" value="5">
-                <label for="star5">★</label>
-                <input type="radio" id="star4" name="rating" value="4">
-                <label for="star4">★</label>
-                <input type="radio" id="star3" name="rating" value="3">
-                <label for="star3">★</label>
-                <input type="radio" id="star2" name="rating" value="2">
-                <label for="star2">★</label>
-                <input type="radio" id="star1" name="rating" value="1">
-                <label for="star1">★</label>
-            </div><br><br>
-            <div class="mb-3" style="display: flex; align-items: center;margin-left: 50px;">
-                <span style="font-size: 20px; color: black; margin-right: 10px;font-weight: bold;">Remarks (if any):</span>
-                <textarea class="form-control" id="address" name="address" rows="3" style="width: 700px;"></textarea>
-            </div>
-            <div class="center">
-                <button type="submit" class="btn btn-primary" style="width: 100px;">Submit</button>
-                <button type="submit" class="btn btn-primary" style="width: 100px;">Cancel</button>
-            </div>
+            <form action="" method="POST">
+              <div class="star-rating" style="align-items: center;margin-left: 300px;">
+                  <span style="font-size: 20px;color: black;font-weight: bold;">Service rating : </span>
+                  <input type="radio" id="star5" name="rating" value="5">
+                  <label for="star5">★</label>
+                  <input type="radio" id="star4" name="rating" value="4">
+                  <label for="star4">★</label>
+                  <input type="radio" id="star3" name="rating" value="3">
+                  <label for="star3">★</label>
+                  <input type="radio" id="star2" name="rating" value="2">
+                  <label for="star2">★</label>
+                  <input type="radio" id="star1" name="rating" value="1">
+                  <label for="star1">★</label>
+              </div><br><br>
+              <div class="mb-3" style="display: flex; align-items: center;margin-left: 50px;">
+                  <span style="font-size: 20px; color: black; margin-right: 10px;font-weight: bold;">Remarks (if any):</span>
+                  <textarea class="form-control" id="address" name="address" rows="3" style="width: 700px;"></textarea>
+              </div>
+              <div class="center">
+                  <button type="submit" class="btn btn-primary" style="width: 100px;">Submit</button>
+                  <button type="submit" class="btn btn-primary" style="width: 100px;">Cancel</button>
+              </div>
+            </form>
         </div>

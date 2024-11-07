@@ -41,11 +41,11 @@
                     <img src="static\house.png" alt="Center Image" class="center-image">
                     
                     <!-- Surrounding images -->
-                    <img src="static\ac mech.png" alt="Surrounding Image 1" class="surrounding-image image-1">
-                    <img src="static\plumbing.png" alt="Surrounding Image 2" class="surrounding-image image-2">
-                    <img src="static\electrical_work.png" alt="Surrounding Image 3" class="surrounding-image image-3">
+                    <img src="static\Ac maintanence.png" alt="Surrounding Image 1" class="surrounding-image image-1">
+                    <img src="static\Plumbing.png" alt="Surrounding Image 2" class="surrounding-image image-2">
+                    <img src="static\Electrical work.png" alt="Surrounding Image 3" class="surrounding-image image-3">
                     <img src="static\Cleaning.png" alt="Surrounding Image 4" class="surrounding-image image-4">
-                    <img src="static\painting.png" alt="Surrounding Image 5" class="surrounding-image image-5">
+                    <img src="static\Painting.png" alt="Surrounding Image 5" class="surrounding-image image-5">
                 </div>
 
                 <!-- Text Box Below the Images -->
@@ -59,13 +59,18 @@
             <div class="col-md-6 d-flex align-items-center justify-content-left">
                 <div class="container">
                     <h2 class="text-center mb-4">Our Services</h2>
+                    {% if service_obj !=[] %}
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">1. <strong>Deep Cleaning</strong></li>
+                        {% for service in service_obj %}
+                        <li class="list-group-item">{{loop.index}} <strong>{{service.name}}</strong></li> 
+                        {% endfor %}
+                        <!-- <li class="list-group-item">1. <strong>Deep Cleaning</strong></li>
                         <li class="list-group-item">2. <strong>Carpentry Works</strong></li>
                         <li class="list-group-item">3. <strong>Plumbing</strong></li>
                         <li class="list-group-item">4. <strong>Electrical Work</strong></li>
-                        <li class="list-group-item">5. <strong>Construction-Related Works</strong></li>
+                        <li class="list-group-item">5. <strong>Construction-Related Works</strong></li> -->
                     </ul>
+                    {% endif %}
                 </div>
             </div>
         </div>

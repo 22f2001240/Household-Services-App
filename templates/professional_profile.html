@@ -4,8 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>professional profile</title>
-        <link rel="stylesheet" href="static\styles\style.css">
-        <link rel="stylesheet" href="static\styles\profile.css">
+        <link rel="stylesheet" href="/static\styles\style.css">
+        <link rel="stylesheet" href="/static\styles\profile.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     </head>
     <body>
@@ -16,74 +16,72 @@
             </nav>
         </div>
         <div class="container">
-            <!-- Profile Header -->
             <div class="profile-header">
                 <img src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-img">
-                <h2>professional name here</h2>
-                <p></p>
-                <p>service name here</p>
+                <h2>{{prof_obj.full_name}} {% if prof_obj.profile_status==0 %}<span style="color: red;"> Requested </span>{% else %}<span style="color: rgb(15, 157, 15);font-size: 20px;">Active {% endif %}</span></h2>
             </div>
-        
-            <!-- Profile Content -->
             <div class="profile-content mt-4">
-                <form>
+                <form action="/prof_profile/{{prof_obj.id}}" method="POST">
                     <div class="row mb-3">
                         <label for="name" class="col-sm-3 col-form-label" style="font-weight: bold;">Name</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="name" value="name">
+                            <input type="text" class="form-control" name="name" id="name" value="{{prof_obj.full_name}}">
                         </div>
                     </div>
-                    
                     <div class="row mb-3">
                         <label for="email" class="col-sm-3 col-form-label" style="font-weight: bold;">Email ID</label>
                         <div class="col-sm-9">
-                            <input type="email" class="form-control" id="email" value="email id">
+                            <input type="email" class="form-control" name="email" id="email" value="{{prof_obj.email_id}}">
                         </div>
                     </div>
-                    
                     <div class="row mb-3">
-                        <label for="contact" class="col-sm-3 col-form-label" style="font-weight: bold;">Contact Number</label>
+                        <label for="contact" class="col-sm-3 col-form-label" style="font-weight: bold;">Password</label>
                         <div class="col-sm-9">
-                            <input type="tel" class="form-control" id="contact" value="contact number">
+                            <input type="password" class="form-control" name="password" id="password" value="{{prof_obj.password}}">
                         </div>
                     </div>
                     
                     <div class="row mb-3">
                         <label for="service" class="col-sm-3 col-form-label" style="font-weight: bold;">Service Name</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="service" value="service name">
+                            <input type="text" class="form-control" name="service" id="service" value="{{service_dict[prof_obj.service_id].name}}">
                         </div>
                     </div>
                     
                     <div class="row mb-3">
                         <label for="experience" class="col-sm-3 col-form-label" style="font-weight: bold;">Experience (Years)</label>
                         <div class="col-sm-9">
-                            <input type="number" class="form-control" id="experience" value="in years">
+                            <input type="number" class="form-control" name="experience" id="experience" value="{{prof_obj.experience}}">
                         </div>
                     </div>
                     
                     <div class="row mb-3">
                         <label for="address" class="col-sm-3 col-form-label" style="font-weight: bold;">Address</label>
                         <div class="col-sm-9">
-                            <textarea class="form-control" id="address" rows="2">address here</textarea>
+                            <textarea class="form-control" name="address" id="address" rows="2" >{{prof_obj.address}}</textarea>
                         </div>
                     </div>
-                    
                     <div class="row mb-3">
                         <label for="pincode" class="col-sm-3 col-form-label" style="font-weight: bold;">Pin Code</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="pincode" value="pin code">
+                            <input type="text" class="form-control" name="pincode" id="pincode" value="{{prof_obj.pin_code}}">
                         </div>
                     </div>
-            
-                    <!-- Save Button -->
+                    <div class="row mb-3">
+                        <label for="pincode" class="col-sm-3 col-form-label" style="font-weight: bold;">Rating</label>
+                        <div class="col-sm-9">
+                            <input type="number" class="form-control" name="rating" id="rating" value="{{prof_obj.rating}}" disabled>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-sm-3"></div>
                         <div class="col-sm-9">
                             <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
                         </div>
                     </div>
-                </form>
+                </form><br>
+                <h3 style="text-align: center;color: rgb(11, 168, 11);">{{msg}} 😊</h3>
+                <a type="button" style="font-size: 17px;margin-left: 47%;" class="badge bg-dark" href="{{url_for('professional_dashboard',prof_id=prof_obj.id)}}">Go Back</a>
             </div>
         </div>
     </body>

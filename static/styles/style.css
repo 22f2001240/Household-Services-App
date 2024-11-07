@@ -1,15 +1,37 @@
-.center2{
+.card {
     text-align: center;
+    transition: transform 0.2s;
+    text-decoration: none; 
+    color: inherit; 
+}
+
+.card:hover {
+    
+    transform: translateY(-5px); /* Hover effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+.center2{
+    
     margin: auto;
     color: rgb(0, 0, 0);
     font-size: 50px;
 }
+.card img {
+    margin-left: 28%;
+    width: 50%; 
+    height: auto; 
+}
 
-/* Box styling */
+.card-title {
+    font-size: 25px;
+    margin-bottom: 5px;
+}
+
 .container-box {
     padding: 20px;
-    background-color: #e9eef2; /* Light grey background */
-    border: 2px solid #bc9c9c; /* Light grey border */
+    background-color: #f3f3f3; 
+    border: 2px solid #bc9c9c;
     border-radius: 10px;
     margin-top: 30px;
     margin-left: 30px;

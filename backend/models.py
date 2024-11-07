@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime 
 
 db=SQLAlchemy()
 
@@ -52,7 +53,6 @@ class Service_Request(db.Model):
     service_id=db.Column(db.Integer,db.ForeignKey("service.id"),nullable=False)
     customer_id=db.Column(db.Integer,db.ForeignKey("customer_info.id"),nullable=False)
     professional_id=db.Column(db.Integer,db.ForeignKey("professional_info.id"),nullable=False)
-    date_of_request=db.Column(db.DateTime,nullable=True)
-    date_of_completion=db.Column(db.Date,nullable=True)
-    service_status=db.Column(db.String,nullable=False) #only requested,assigned or closed
+    date_of_request=db.Column(db.DateTime, default=datetime.now)
+    service_status=db.Column(db.Integer,default=0) # requested from cust=>0 ACCEPTED by prof=>1 reject by prof =>2 CLOSED by cust=>3
     remarks=db.Column(db.String,nullable=True)
