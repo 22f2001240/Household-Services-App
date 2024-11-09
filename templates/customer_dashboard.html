@@ -23,10 +23,10 @@
                                 <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#home">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('search_tab_admin')}}">Search</a>
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('search_tab_cust',cust_id=cust_obj.id)}}">Search</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#summary">Summary</a>
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('summary_customer',cust_id=cust_obj.id)}}">Summary</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="/">Logout</a>
@@ -39,7 +39,7 @@
 
         <div id="home" class="content-section">
             <div style="display: flex; justify-content: right;margin-top: 30px;font-size: 25px;margin-right: 30px;">
-                <a href="professional_profile.html" class="badge bg-dark">Profile</a>
+                <a href="{{url_for('cust_profile',cust_id=cust_obj.id)}}" class="badge bg-dark">Profile</a>
             </div>
             <div class="container-box" style="width: auto;">
                 <h2 style="text-align: center;color: #d2900e;font-size: 35px;">Looking For ?</h2>
@@ -62,6 +62,7 @@
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Service Name</th>
+                            <th scope="col">Booked For</th>
                             <th scope="col">Professional Name</th>
                             <th scope="col">Email ID</th>
                             <th scope="col" >Status</th>
@@ -74,6 +75,7 @@
                             <tr>
                                 <th scope="col">{{req.id}}</th>
                                 <td>{{serv_dict[req.service_id].name}}</td>
+                                <td>{{req.service_date}}</td>
                                 <td>{{prof_dict[req.professional_id].full_name}}</td>
                                 <td>{{prof_dict[req.professional_id].email_id}}</td>
                                 <td>
@@ -89,9 +91,12 @@
                                 </td>
                                 <td>
                                     {% if req.service_status == 0 %}
-                                    <a href="{{url_for('cancel_req',req_id=req.id)}}" name="close" class="badge bg-danger">Cancel</button>
+                                    <a href="{{url_for('cancel_req',req_id=req.id)}}" name="cancel" class="badge bg-danger">Cancel</button>
+                                    <a href="{{url_for('edit_req_date',req_id=req.id)}}" name="edit" class="badge bg-primary">Edit </button>
                                     {% elif  req.service_status == 1 %}
                                     <a href="{{url_for('closing_req',req_id=req.id)}}" name="close" class="badge bg-success">Close it? </button>
+                                    {% elif  req.service_status == 3 %}
+                                    <a href="{{url_for('edit_closed_req',req_id=req.id)}}" name="edit" class="badge bg-primary">Edit </button>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -110,32 +115,6 @@
                 </table>
             </div>
         </div>
-
-
-<!-- For search page -->
-        <div id="search" class="content-section" style="position: relative;">
-            <!-- Container for Search by text, dropdown, and search box -->
-            <div class="search-container">
-                <!-- "Search by" Label -->
-                <span class="search-label">Search by</span>
-
-                <!-- Dropdown functionality -->
-                <input type="checkbox" class="dropdown-toggle-checkbox" id="dropdownToggle" >
-                <label for="dropdownToggle" class="dropdown-label">Service Name</label>
-                <div class="dropdown-menu" >
-                    <a class="dropdown-item" href="#">Service Name</a>
-                    <a class="dropdown-item" href="#">Location</a>
-                    <a class="dropdown-item" href="#">Pin Code</a>
-                    <a class="dropdown-item" href="#">Year of Experience</a>
-                    <!-- <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Separated link</a> -->
-                </div>
-                <!-- Search input box -->
-                <!--if we choose date wise then enter a date here -->
-                <input type="text" class="search-input" placeholder="Search..."> 
-            </div>
-        </div>
-
 <!-- for summary statistical charts -->
         <div id="summary" class="content-section">
             <h1>Overall Customer Ratings</h1>

@@ -6,15 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    {{msg}}
-    <form action="/fsignup" method="POST">
-        <label for="service" class="form-label">Select Services</label>
-        <select class="form-select" id="service" name="service" required>
-            {% for service in service_obj %}
-                <option value="{{service.id}}">{{service.name}}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">submit</button>
-    </form>
+    {{rating}}
+    
 </body>
 </html>

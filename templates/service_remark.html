@@ -29,7 +29,7 @@
                     <div class="p-3 border bg-light">{{serv_dict[req_obj.service_id].Description}}</div>
                   </div>
                   <div class="col">
-                    <div class="p-3 border bg-light">{{req_obj.date_of_request.strftime('%Y-%m-%d')}}</div>
+                    <div class="p-3 border bg-light">{{req_obj.service_date.strftime('%Y-%m-%d')}}</div>
                   </div>
                   <div class="col">
                     <div class="p-3 border bg-light">{{prof_dict[req_obj.professional_id].full_name}}</div>
@@ -43,26 +43,20 @@
                 </div>
             </div><br><br>
             <form action="" method="POST">
-              <div class="star-rating" style="align-items: center;margin-left: 300px;">
-                  <span style="font-size: 20px;color: black;font-weight: bold;">Service rating : </span>
-                  <input type="radio" id="star5" name="rating" value="5">
-                  <label for="star5">★</label>
-                  <input type="radio" id="star4" name="rating" value="4">
-                  <label for="star4">★</label>
-                  <input type="radio" id="star3" name="rating" value="3">
-                  <label for="star3">★</label>
-                  <input type="radio" id="star2" name="rating" value="2">
-                  <label for="star2">★</label>
-                  <input type="radio" id="star1" name="rating" value="1">
-                  <label for="star1">★</label>
-              </div><br><br>
+              <div class="rating">
+                <input type="radio" name="rating" id="5 star" value="5"><label for="5 star">★</label>
+                <input type="radio" name="rating" id="4 star" value="4"><label for="4 star">★</label>
+                <input type="radio" name="rating" id="3 star" value="3"><label for="3 star">★</label>
+                <input type="radio" name="rating" id="2 star" value="2"><label for="2 star">★</label>
+                <input type="radio" name="rating" id="1 star" value="1"><label for="1 star">★</label>
+            </div><br><br>
               <div class="mb-3" style="display: flex; align-items: center;margin-left: 50px;">
                   <span style="font-size: 20px; color: black; margin-right: 10px;font-weight: bold;">Remarks (if any):</span>
-                  <textarea class="form-control" id="address" name="address" rows="3" style="width: 700px;"></textarea>
+                  <textarea class="form-control" id="remark" name="remark" rows="3" style="width: 700px;"></textarea>
               </div>
               <div class="center">
                   <button type="submit" class="btn btn-primary" style="width: 100px;">Submit</button>
-                  <button type="submit" class="btn btn-primary" style="width: 100px;">Cancel</button>
+                  <a href="{{url_for('customer_dashboard',cust_id=cust_obj.id)}}" type="submit" class="btn btn-primary" style="width: 100px;">Cancel</a>
               </div>
             </form>
         </div>

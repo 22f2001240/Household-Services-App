@@ -25,12 +25,30 @@
                 <div class="container-fluid">
                     <a class="navbar-brand text-dark" href="#"><strong>Service Requests - {{serv_name}}</strong></a>
                 </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('admin_dashboard')}}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('search_tab_admin')}}">Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#summary">Summary</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="/">Logout</a>
+                        </li>
+                    </ul>
+                </div>
             </nav>
-        </div>     
+        </div>
         {% if service_requests != [] %}
             <div class="container-box">
                 <h2>Service Requests - {{serv_name}} </h2><br>
-                {% for request in service_requests %}
                     <table class="table table-dark table-striped" style="text-align: center;">
                         <thead>
                             <tr>
@@ -38,22 +56,52 @@
                                 <th scope="col">Requested Customer</th>
                                 <th scope="col">Assigned Professional</th>
                                 <th scope="col">Requested Date</th>
-                                <th scope="col">Closed Date (if closed)</th>
+                                <th scope="col">Service Scheduled for</th>
                                 <th scope="col">Status</th>
+                                <th scope="col">Rating</th>
+                                <th scope="col">Remarks</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for request in service_requests %}
                             <tr>
                                 <td>{{request.id}} </td>
                                 <td>{{customer[request.customer_id].full_name}} </td>
                                 <td>{{professionals[request.professional_id].full_name}} </td>
-                                <td>{{request.date_of_request}}</td>
-                                <td>{{request.completion_date}}</td>
-                                <td>{{request.service_status}}</td>
+                                <td>{{request.date_of_request.strftime('%Y-%m-%d')}}</td>
+                                <td>{{request.service_date}}</td>
+                                <td>
+                                    {% if request.service_status==0 %}
+                                        <p>Requested</p>
+                                    {% elif request.service_status==1 %}
+                                        <p>Accepted</p>
+                                    {% elif request.service_status==2 %}
+                                        <p>Rejected</p>
+                                    {% elif request.service_status==3 %}
+                                        <p>Closed</p>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if request.rating ==1 %}
+                                        <p style="color: rgb(232, 232, 25);font-size: 20px;">★</p>
+                                    {% elif request.rating ==2 %}
+                                        <p style="color: rgb(232, 232, 25);font-size: 20px;">★★</p>
+                                    {% elif request.rating ==3 %}
+                                        <p style="color: rgb(232, 232, 25);font-size: 20px;">★★★</p>
+                                    {% elif request.rating ==4 %}
+                                        <p style="color: rgb(232, 232, 25);font-size: 20px;">★★★★</p>
+                                    {% elif request.rating ==5 %}
+                                        <p style="color: rgb(232, 232, 25);font-size: 20px;">★★★★★</p>
+                                    {% else %}
+                                        <p>None</p>
+                                    {% endif %}
+                                </td>
+                                <td>{{request.remarks}} </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
-                {% endfor %}
+                
             </div>
         {% else %}
             <h2 style="text-align: center;color: red;padding: 50px;"> No Requests yet !</h2>

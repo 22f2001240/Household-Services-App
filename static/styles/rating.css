@@ -1,21 +1,24 @@
-.star-rating {
-    direction:ltr;
-    display: inline-flex;
-    font-size: 2em;
-    color: gray;
+
+
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
 }
-.star-rating input[type="radio"] {
+
+.rating input {
     display: none;
 }
-.star-rating label {
-    color: gold;
+
+.rating label {
+    font-size: 2rem;
+    color: lightgray;
     cursor: pointer;
-    padding: 0 5px;
+    transition: color 0.3s;
 }
-.star-rating input[type="radio"]:checked ~ label {
-    color: gray;
-}
-.star-rating label:hover,
-.star-rating label:hover ~ label {
-    color: rgb(179, 154, 13);
+
+.rating input:checked ~ label,
+.rating label:hover,
+.rating label:hover ~ label {
+    color: rgb(255, 213, 0);
 }

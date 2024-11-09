@@ -4,6 +4,7 @@ from backend.models import *
 from datetime import datetime
 import os
 
+# active_profs=Professional_Info.query.filter(Professional_Info.profile_status==1,Professional_Info.blocked_status==0).all()
 
 @app.route("/")
 def home():
@@ -20,8 +21,11 @@ def clogin():
         user_obj=Customer_Info.query.filter_by(email_id=email_id,password=pwd).first()
         if user_obj:
             if user_obj.role==0:
-                return  redirect("/admin_dashboard")                      #render_template ("admin_dashboard.html")
+                return  redirect("/admin_dashboard")                    
             elif user_obj.role==1:
+                if user_obj.blocked_status == 1:
+                    err_msg="Sorry .You have been knocked Out !!"
+                    return render_template("customer_login.html",err_msg=err_msg)
                 return redirect(url_for('customer_dashboard',cust_id=user_obj.id))
         err_msg="Invalid Login !! Please enter a valid information"
     return render_template("customer_login.html",err_msg=err_msg)
@@ -54,7 +58,10 @@ def flogin():
         prof_obj=Professional_Info.query.filter_by(email_id=email_id,password=pwd).first()
         if prof_obj:
             if prof_obj.blocked_status == 1:
-                err_msg="Sorry .Your account is bloacked !!"
+                err_msg="Sorry .You have been knocked Out  !!"
+                return render_template("proff_login.html",err_msg=err_msg)
+            if prof_obj.profile_status == 0: #Not yet accepted the request
+                err_msg="Waiting for the approval from admin. Please wait !!"
                 return render_template("proff_login.html",err_msg=err_msg)
             prof_id=prof_obj.id
             return redirect(url_for('professional_dashboard',prof_id=prof_id))
@@ -206,6 +213,21 @@ def search_tab_admin():
         search_val = request.form.get('search_val')
         if categ == "Services":
             suggestions=Service.query.filter(Service.name.ilike(f'%{search_val}%')).all() #for case sensitive short words.
+        elif categ == "Service Requests": 
+            status=["requested","accepted","rejected","closed"]
+            for word in status:
+                if word.startswith(search_val.lower()):
+                    suggestions.append(word)
+        elif categ == "Customers": 
+            status=["blocked","active"]
+            for word in status:
+                if word.startswith(search_val.lower()):
+                    suggestions.append(word)
+        elif categ == "Professionals": 
+            status=["blocked","active","requested"]
+            for word in status:
+                if word.startswith(search_val.lower()):
+                    suggestions.append(word)
     return render_template("search_tab_admin.html",suggestions=suggestions,categ=categ)
 
 #for  service search by name (admin)
@@ -214,6 +236,59 @@ def service_details(ser_name):
     service_obj=Service.query.filter_by(name=ser_name).first()
     return render_template("service_details.html",service=service_obj)
 
+#for request search by status (admin)
+@app.route('/request_status/<status>')
+def request_status(status):
+    status_dict={'requested':0,'accepted':1,"rejected":2,"closed":3}
+    stat_dict={0:'Requested',1:'Accepted',2:"Rejected",3:"Closed"}
+    cust_dict={cust.id:cust for cust in Customer_Info.query.all()}
+    prof_dict={prof.id:prof for prof in Professional_Info.query.all()}
+    serv_status=status_dict[status]
+    req_stat=stat_dict[serv_status]
+    req_objs=Service_Request.query.filter_by(service_status=serv_status).all()
+    return render_template("request_details.html",req_objs=req_objs,req_stat=req_stat,customers=cust_dict,professionals=prof_dict)
+
+#for customer search by status (admin)
+@app.route('/customer_status/<status>')
+def customer_status(status):
+    status_dict={'active':0,'blocked':1}
+    stat=status_dict[status]
+    cust_objs=Customer_Info.query.filter(Customer_Info.blocked_status==stat,Customer_Info.role==1).all()
+    stat_dict={0:'Active',1:'Blocked'}
+    cust_status=stat_dict[stat]
+    return render_template("customer_details.html",cust_objs=cust_objs,cust_status=cust_status)
+
+#for professional search by status (admin)
+@app.route('/professional_status/<status>')
+def professional_status(status):
+    service_dict={service_obj.id:service_obj for service_obj in Service.query.all()}
+    if status == 'blocked':
+        stat='Blocked'
+        prof_objs=Professional_Info.query.filter_by(blocked_status=1).all()
+    elif status == 'requested':    
+        stat="Requested"
+        prof_objs=Professional_Info.query.filter_by(profile_status=0).all()
+    else:
+        stat="Active"
+        prof_objs=Professional_Info.query.filter(Professional_Info.profile_status==1,Professional_Info.blocked_status==0).all()
+    return render_template("professional_details.html",service_dict=service_dict,prof_objs=prof_objs,stat=stat)
+
+#for summary to admin
+@app.route('/summary_admin')
+def summary_admin():
+    service_name=[]
+    service_req_count=db.session.query(Service_Request.service_id,db.func.count(Service_Request.id).label('service_count')).group_by(Service_Request.service_id).all() #list of typle (id,count)
+    service_id=[req.service_id for req in service_req_count]
+    serv_count=[req.service_count for req in service_req_count]
+    rating_counts=db.session.query(Service_Request.rating,db.func.count(Service_Request.id).label('r_count')).filter(Service_Request.service_status==3).group_by(Service_Request.rating).all()
+    ratings=[rate.rating for rate in rating_counts]
+    rating_count=[rate.r_count for rate in rating_counts]
+    for serv in service_id:
+        service_obj=Service.query.get(serv)
+        service_name.append(service_obj.name)
+    return render_template("summary_admin.html",service_name=service_name,serv_count=serv_count,ratings=ratings,rating_count=rating_count)
+
+
 #dashboard for professional
 @app.route("/professional_dashboard/<int:prof_id>",methods=["GET","POST"])
 def professional_dashboard(prof_id):
@@ -221,13 +296,20 @@ def professional_dashboard(prof_id):
     ser_req_list=Service_Request.query.filter_by(professional_id=prof_id).all()
     cust_dict={cust_obj.id:cust_obj for cust_obj in Customer_Info.query.all()}
     if ser_req_list !=[]:
+        rating_list=[]
         req_list=[]
         closedreq_list=[]
         for req in ser_req_list:
+            if req.rating != 0:
+                rating_list.append(int(req.rating))
             if req.service_status == 0:
                 req_list.append(req)
             elif req.service_status == 3:
                 closedreq_list.append(req)
+        if len(rating_list) != 0:
+            rating=sum(rating_list)/len(rating_list)
+            prof_obj.rating=rating
+            db.session.commit()
         return render_template("professional_dashboard.html",closedreq_list=closedreq_list,prof_obj=prof_obj,req_list=req_list,cust_dict=cust_dict)
 
     return render_template("professional_dashboard.html",prof_obj=prof_obj)
@@ -287,30 +369,61 @@ def search_tab_prof(prof_id):
             cust_objects=Customer_Info.query.filter(Customer_Info.address.ilike(f'%{search_val}%')).all()
             if cust_objects !=[]:
                 for cust in cust_objects:
-                    if cust.address not in suggestions:
+                    if cust.address not in suggestions and cust.blocked_status == 0:
                         suggestions.append(cust.address)
         elif categ == "Pin Code":
             cust_objects=Customer_Info.query.filter(Customer_Info.pin_code.ilike(f'%{search_val}%')).all()
             if cust_objects !=[]:
                 for cust in cust_objects:
-                    if cust.pin_code not in suggestions:
+                    if cust.pin_code not in suggestions and cust.blocked_status == 0:
                         suggestions.append(cust.pin_code)
+        elif categ == "Date":
+            serv_req_objects=Service_Request.query.filter(Service_Request.service_date.ilike(f'%{search_val}%')).all()
+            if serv_req_objects !=[]:
+                for req in serv_req_objects:
+                    if req.service_date not in suggestions:
+                        suggestions.append(req.service_date)
             
     return render_template("search_tab_prof.html",prof_obj=prof_obj,suggestions=suggestions,categ=categ)
 
 #for location based search by prof of customer
 @app.route('/loc_custs/<loc>/<int:prof_id>')
 def loc_custs(loc,prof_id):
-    cust_obj=Customer_Info.query.filter_by(address=loc).all()
+    cust_obj=Customer_Info.query.filter(Customer_Info.address==loc,Customer_Info.blocked_status==0).all()
     prof_obj=Professional_Info.query.get(prof_id)
     return render_template("search_based_cust.html",customers=cust_obj,prof_obj=prof_obj)
 
 #for pincode based search by prof of customer
 @app.route('/pin_custs/<pin>/<int:prof_id>')
 def pin_custs(pin,prof_id):
-    cust_obj=Customer_Info.query.filter_by(pin_code=pin).all()
+    cust_obj=Customer_Info.query.filter(Customer_Info.pin_code==pin,Customer_Info.blocked_status==0).all()
     prof_obj=Professional_Info.query.get(prof_id)
     return render_template("search_based_cust.html",customers=cust_obj,prof_obj=prof_obj)
+
+#for date based search by prof of customer
+@app.route('/date_custs/<date>/<int:prof_id>')
+def date_custs(date,prof_id):
+    requests=Service_Request.query.filter(Service_Request.service_date==date,Service_Request.professional_id==prof_id).all()
+    prof_obj=Professional_Info.query.get(prof_id)
+    cust_dict={cust.id:cust for cust in Customer_Info.query.all()}
+    service_dict={service.id:service for service in Service.query.all()}
+    return render_template("search_based_req.html",serv_dict=service_dict,requests=requests,cust_dict=cust_dict,prof_obj=prof_obj)
+
+#for summary to professional
+@app.route('/summary_professional/<int:prof_id>')
+def summary_professional(prof_id):
+    prof_obj=Professional_Info.query.get(prof_id)
+    service_stat_req=db.session.query(Service_Request.service_status,db.func.count(Service_Request.id).label('service_status_count')).filter(Service_Request.professional_id==prof_id).group_by(Service_Request.service_status).all() 
+    stat=[req.service_status for req in service_stat_req]
+    stat_dict={0:"Requested",1:"Accepted",2:"Rejected",3:"Closed"}
+    status=[]
+    for x in stat:
+        status.append(stat_dict[x])
+    req_stat_count=[req.service_status_count for req in service_stat_req]
+    service_reviews=db.session.query(Service_Request.rating,db.func.count(Service_Request.id).label('service_rating_count')).filter(Service_Request.professional_id==prof_id,Service_Request.service_status==3).group_by(Service_Request.rating).all() 
+    ratings=[req.rating for req in service_reviews]
+    rating_count=[req.service_rating_count for req in service_reviews]
+    return render_template("summary_professional.html",prof_obj=prof_obj,status=status,req_stat_count=req_stat_count,ratings=ratings,rating_count=rating_count)
 
 #Dashboard for Customer
 @app.route("/customer_dashboard/<int:cust_id>",methods=["GET","POST"])
@@ -325,19 +438,23 @@ def customer_dashboard(cust_id):
 #Best services for Customer from each card
 @app.route("/best_service/<int:serv_id>/<int:cust_id>")
 def best_service(serv_id,cust_id):
-    prof_obj_list=Professional_Info.query.filter_by(service_id=serv_id).all()
+    prof_obj_list=Professional_Info.query.filter(Professional_Info.service_id==serv_id,Professional_Info.blocked_status==0,Professional_Info.profile_status==1).all()
     serv_obj=Service.query.get(serv_id)
     cust_obj=Customer_Info.query.get(cust_id)
     return render_template("best_service.html",prof_objs=prof_obj_list,serv_obj=serv_obj,cust_obj=cust_obj)
 
 #Book a service by customer
-@app.route("/book_service/<int:serv_id>/<int:prof_id>/<int:cust_id>")
-def book_service(serv_id,prof_id,cust_id):
-    # Request_date=datetime.strptime(request.form.get('Release date'),'%Y-%m-%d').date()
-    new_req=Service_Request(service_id=serv_id,customer_id=cust_id,professional_id=prof_id)
-    db.session.add(new_req)
-    db.session.commit()
-    return redirect(url_for('customer_dashboard',cust_id=cust_id))
+@app.route("/book_service/<int:serv_id>/<int:prof_id>/<int:cust_id>",methods=["GET","POST"])
+def book_service(serv_id,prof_id,cust_id):  
+    date=''
+    cust_obj=Customer_Info.query.get(cust_id)
+    if request.method=='POST':
+        service_date=datetime.strptime(request.form.get('date'),'%Y-%m-%d').date()
+        new_req=Service_Request(service_id=serv_id,customer_id=cust_id,professional_id=prof_id,service_date=service_date)
+        db.session.add(new_req)
+        db.session.commit()
+        return redirect(url_for('customer_dashboard',cust_id=cust_id))
+    return render_template("book_service.html",date=date,cust_obj=cust_obj)
 
 #Cancel a service request by customer
 @app.route("/cancel_req/<int:req_id>")
@@ -349,11 +466,134 @@ def cancel_req(req_id):
     return redirect(url_for('customer_dashboard',cust_id=cust_id))
 
 #Closing a service request by customer
-@app.route("/closing_req/<int:req_id>")
+@app.route("/closing_req/<int:req_id>",methods=['GET','POST'])
 def closing_req(req_id):
     req_obj=Service_Request.query.get(req_id)
     cust_id=req_obj.customer_id
     cust_obj=Customer_Info.query.get(cust_id)
     service_dict={service.id:service for service in Service.query.all()}
     prof_dict={prof.id:prof for prof in Professional_Info.query.all()}
+    if request.method=="POST":
+        rating=request.form.get('rating')
+        remark=request.form.get('remark')
+        req_obj.service_status=3 #closed
+        if rating:
+            req_obj.rating=rating
+        if remark:
+            req_obj.remarks=remark
+        db.session.commit()
+        return redirect(url_for('customer_dashboard',cust_id=cust_id))
     return render_template('service_remark.html',cust_obj=cust_obj,req_obj=req_obj,prof_dict=prof_dict,serv_dict=service_dict)
+
+#Edit a service request by customer
+@app.route("/edit_req_date/<int:req_id>",methods=['GET','POST'])
+def edit_req_date(req_id):
+    req_obj=Service_Request.query.get(req_id)
+    cust_id=req_obj.customer_id
+    cust_obj=Customer_Info.query.get(cust_id)
+    service_dict={service.id:service for service in Service.query.all()}
+    prof_dict={prof.id:prof for prof in Professional_Info.query.all()}
+    if request.method=="POST":
+        new_date=datetime.strptime(request.form.get('date'),'%Y-%m-%d').date()
+        req_obj.service_date=new_date
+        db.session.commit()
+    return render_template("edit_req.html",req_obj=req_obj,service_dict=service_dict,prof_dict=prof_dict,cust_obj=cust_obj)
+
+#Edit closed service request by customer
+@app.route("/edit_closed_req/<int:req_id>",methods=['GET','POST'])
+def edit_closed_req(req_id):
+    req_obj=Service_Request.query.get(req_id)
+    cust_id=req_obj.customer_id
+    cust_obj=Customer_Info.query.get(cust_id)
+    service_dict={service.id:service for service in Service.query.all()}
+    prof_dict={prof.id:prof for prof in Professional_Info.query.all()}
+    if request.method=="POST":
+        new_rating=request.form.get('rating')
+        new_remark=request.form.get('remark')
+        req_obj.remarks=new_remark
+        req_obj.rating=new_rating
+        db.session.commit()
+    return render_template("edit_closed_req.html",req_obj=req_obj,service_dict=service_dict,prof_dict=prof_dict,cust_obj=cust_obj)
+
+#To see the customer's profile by customer to edit
+@app.route('/cust_profile/<int:cust_id>',methods=['GET','POST'])
+def cust_profile(cust_id):
+    cust_obj=Customer_Info.query.get(cust_id)
+    msg=''
+    if request.method=='POST':
+        email_id=request.form.get("email")
+        pwd=request.form.get("password")
+        name=request.form.get("name")
+        adrs=request.form.get("address")
+        phone=request.form.get("phone")
+        pin=request.form.get("pincode")
+        cust_obj.email_id=email_id
+        cust_obj.password=pwd
+        cust_obj.full_name=name
+        cust_obj.phone_number=phone
+        cust_obj.address=adrs
+        cust_obj.pin_code=pin
+        db.session.commit()
+        msg='Succefully Saved'
+    return render_template("customer_profile.html",cust_obj=cust_obj,msg=msg)
+
+#Search tab for customer
+@app.route('/search_tab_cust/<int:cust_id>',methods=['GET','POST'])
+def search_tab_cust(cust_id):
+    cust_obj=Customer_Info.query.get(cust_id)
+    suggestions = []
+    categ=''
+    if request.method == 'POST':
+        categ=request.form.get('category')
+        search_val = request.form.get('search_val')
+        if categ == "Services":
+            suggestions=Service.query.filter(Service.name.ilike(f'%{search_val}%')).all()
+        elif categ == "Location":
+            prof_objects=Professional_Info.query.filter(Professional_Info.address.ilike(f'%{search_val}%')).all()
+            if prof_objects !=[]:
+                for prof in prof_objects:
+                    if prof.address not in suggestions and prof.blocked_status == 0 and prof.profile_status == 1:
+                        suggestions.append(prof.address)
+        elif categ == "Pin Code":
+            prof_objects=Professional_Info.query.filter(Professional_Info.pin_code.ilike(f'%{search_val}%')).all()
+            if prof_objects !=[]:
+                for prof in prof_objects:
+                    if prof.pin_code not in suggestions and prof.blocked_status == 0 and prof.profile_status == 1:
+                        suggestions.append(prof.pin_code)
+    return render_template("search_tab_cust.html",cust_obj=cust_obj,suggestions=suggestions,categ=categ)
+
+#for  service search by name (customer)
+@app.route('/service_details_cust/<ser_name>/<int:cust_id>')
+def service_details_cust(ser_name,cust_id):
+    cust_obj=Customer_Info.query.get(cust_id)
+    service_obj=Service.query.filter_by(name=ser_name).first()
+    return render_template("service_details_cust.html",service=service_obj,cust_obj=cust_obj)
+
+#for location based search by customers by professionals
+@app.route('/loc_profs/<loc>/<int:cust_id>')
+def loc_profs(loc,cust_id):
+    prof_objs=Professional_Info.query.filter(Professional_Info.address==loc,Professional_Info.profile_status==1,Professional_Info.blocked_status==0).all()
+    cust_obj=Customer_Info.query.get(cust_id)
+    service_dict={service.id:service for service in Service.query.all()}
+    return render_template("search_based_prof.html",professionals=prof_objs,cust_obj=cust_obj,service_dict=service_dict)
+
+#for pincode based search by customers by professionals
+@app.route('/pin_profs/<pin>/<int:cust_id>')
+def pin_profs(pin,cust_id):
+    prof_objs=Professional_Info.query.filter(Professional_Info.pin_code==pin,Professional_Info.profile_status==1,Professional_Info.blocked_status==0).all()
+    cust_obj=Customer_Info.query.get(cust_id)
+    service_dict={service.id:service for service in Service.query.all()}
+    return render_template("search_based_prof.html",professionals=prof_objs,cust_obj=cust_obj,service_dict=service_dict)
+
+#for summary to customer
+@app.route('/summary_customer/<int:cust_id>')
+def summary_customer(cust_id):
+    cust_obj=Customer_Info.query.get(cust_id)
+    service_stat_req=db.session.query(Service_Request.service_status,db.func.count(Service_Request.id).label('service_status_count')).filter(Service_Request.customer_id==cust_id).group_by(Service_Request.service_status).all() 
+    stat=[req.service_status for req in service_stat_req]
+    stat_dict={0:"Requested",1:"Accepted",2:"Rejected",3:"Closed"}
+    status=[]
+    for x in stat:
+        status.append(stat_dict[x])
+    req_stat_count=[req.service_status_count for req in service_stat_req]
+    return render_template("summary_customer.html",cust_obj=cust_obj,status=status,req_stat_count=req_stat_count)
