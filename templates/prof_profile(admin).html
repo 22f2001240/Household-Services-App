@@ -42,7 +42,7 @@
                             <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('search_tab_admin')}}">Search</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#summary">Summary</a>
+                            <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('summary_admin')}}">Summary</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="/">Logout</a>
@@ -51,9 +51,9 @@
                 </div>
             </nav>
         </div>
-        <div class="card">
-            <h2>{{prof.full_name}}</h2>
-            <div style="text-align: left;">
+        <div class="card" style="width:400px;font-size: 20px; ">
+            <h1>{{prof.full_name}}</h1><br>
+            <div >
                 <p>Professional ID : {{prof.id}}</p>
                 <p>Service Name : {{name}}</p>
                 <p>Email-ID : {{prof.email_id}}</p>

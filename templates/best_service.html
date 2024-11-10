@@ -55,7 +55,13 @@
                                 <th scope="row">{{prof.id}}</th>
                                 <td>{{prof.full_name}}</td>
                                 <td>{{prof.address}}</td>
-                                <td>{{prof.rating}}</td>
+                                <td>
+                                    {% if prof.rating == 0 %}
+                                        No Rating
+                                    {% else %}
+                                        {{prof.rating}}
+                                    {% endif %}
+                                </td>
                                 <td>{{serv_obj.Description}}</td>
                                 <td>
                                     <a href="{{url_for('book_service',serv_id=serv_obj.id,prof_id=prof.id,cust_id=cust_obj.id)}}" type="button" class="btn btn-success">Book</a>

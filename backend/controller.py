@@ -4,7 +4,9 @@ from backend.models import *
 from datetime import datetime
 import os
 
-# active_profs=Professional_Info.query.filter(Professional_Info.profile_status==1,Professional_Info.blocked_status==0).all()
+cust_dict={cust_obj.id:cust_obj for cust_obj in Customer_Info.query.all()}
+prof_dict={prof_obj.id:prof_obj for prof_obj in Professional_Info.query.all()}
+service_dict={service.id:service for service in Service.query.all()}
 
 @app.route("/")
 def home():
@@ -91,14 +93,16 @@ def fsignup():
         return render_template("proff_login.html",err_msg="",msg="Registration successful!")
     return render_template("professional_signup.html",err_msg="",msg="",service_obj=service_obj)
 
+
 #for showing the service in admin page
 @app.route("/admin_dashboard",methods=["GET","POST"])
 def admin_dashboard():
     service_list=Service.query.all()
     prof_list=Professional_Info.query.all()
-    service_dict={service.id:service for service in Service.query.all()}
-    category=request.form.get('category')
-    return render_template ("admin_dashboard.html",service_list=service_list,prof_list=prof_list,service_dict=service_dict)
+    req_list=Service_Request.query.all()
+    
+    
+    return render_template ("admin_dashboard.html",professionals=prof_dict,customers=cust_dict,req_objs=req_list,service_list=service_list,prof_list=prof_list,service_dict=service_dict)
 
 #for each service page edit
 @app.route("/edit_service/<int:service_id>",methods=["GET","POST"])
@@ -151,8 +155,6 @@ def service_request(service_id):
     serv_obj=Service.query.get(service_id)
     serv_name=serv_obj.name
     service_requests=Service_Request.query.filter_by(service_id=service_id).all()
-    prof_dict={prof_obj.id:prof_obj for prof_obj in Professional_Info.query.all()} #profession_dict {profession_id:profession obj}
-    cust_dict={cust_obj.id:cust_obj for cust_obj in Customer_Info.query.all()}
     return render_template("service_request.html",serv_name=serv_name,customer=cust_dict,service_requests=service_requests,professionals=prof_dict)
 
 #Display the file
@@ -241,8 +243,6 @@ def service_details(ser_name):
 def request_status(status):
     status_dict={'requested':0,'accepted':1,"rejected":2,"closed":3}
     stat_dict={0:'Requested',1:'Accepted',2:"Rejected",3:"Closed"}
-    cust_dict={cust.id:cust for cust in Customer_Info.query.all()}
-    prof_dict={prof.id:prof for prof in Professional_Info.query.all()}
     serv_status=status_dict[status]
     req_stat=stat_dict[serv_status]
     req_objs=Service_Request.query.filter_by(service_status=serv_status).all()
@@ -261,7 +261,6 @@ def customer_status(status):
 #for professional search by status (admin)
 @app.route('/professional_status/<status>')
 def professional_status(status):
-    service_dict={service_obj.id:service_obj for service_obj in Service.query.all()}
     if status == 'blocked':
         stat='Blocked'
         prof_objs=Professional_Info.query.filter_by(blocked_status=1).all()
@@ -294,7 +293,6 @@ def summary_admin():
 def professional_dashboard(prof_id):
     prof_obj=Professional_Info.query.get(prof_id)
     ser_req_list=Service_Request.query.filter_by(professional_id=prof_id).all()
-    cust_dict={cust_obj.id:cust_obj for cust_obj in Customer_Info.query.all()}
     if ser_req_list !=[]:
         rating_list=[]
         req_list=[]
@@ -366,19 +364,19 @@ def search_tab_prof(prof_id):
         categ=request.form.get('category')
         search_val = request.form.get('search_val')
         if categ == "Location":
-            cust_objects=Customer_Info.query.filter(Customer_Info.address.ilike(f'%{search_val}%')).all()
+            cust_objects=Customer_Info.query.filter(Customer_Info.address.ilike(f'%{search_val}%'),Customer_Info.role==1).all()
             if cust_objects !=[]:
                 for cust in cust_objects:
                     if cust.address not in suggestions and cust.blocked_status == 0:
                         suggestions.append(cust.address)
         elif categ == "Pin Code":
-            cust_objects=Customer_Info.query.filter(Customer_Info.pin_code.ilike(f'%{search_val}%')).all()
+            cust_objects=Customer_Info.query.filter(Customer_Info.pin_code.ilike(f'%{search_val}%'),Customer_Info.role==1).all()
             if cust_objects !=[]:
                 for cust in cust_objects:
                     if cust.pin_code not in suggestions and cust.blocked_status == 0:
                         suggestions.append(cust.pin_code)
         elif categ == "Date":
-            serv_req_objects=Service_Request.query.filter(Service_Request.service_date.ilike(f'%{search_val}%')).all()
+            serv_req_objects=Service_Request.query.filter(Service_Request.service_date.ilike(f'%{search_val}%'),Customer_Info.role==1).all()
             if serv_req_objects !=[]:
                 for req in serv_req_objects:
                     if req.service_date not in suggestions:
@@ -389,14 +387,14 @@ def search_tab_prof(prof_id):
 #for location based search by prof of customer
 @app.route('/loc_custs/<loc>/<int:prof_id>')
 def loc_custs(loc,prof_id):
-    cust_obj=Customer_Info.query.filter(Customer_Info.address==loc,Customer_Info.blocked_status==0).all()
+    cust_obj=Customer_Info.query.filter(Customer_Info.address==loc,Customer_Info.blocked_status==0,Customer_Info.role==1).all()
     prof_obj=Professional_Info.query.get(prof_id)
     return render_template("search_based_cust.html",customers=cust_obj,prof_obj=prof_obj)
 
 #for pincode based search by prof of customer
 @app.route('/pin_custs/<pin>/<int:prof_id>')
 def pin_custs(pin,prof_id):
-    cust_obj=Customer_Info.query.filter(Customer_Info.pin_code==pin,Customer_Info.blocked_status==0).all()
+    cust_obj=Customer_Info.query.filter(Customer_Info.pin_code==pin,Customer_Info.blocked_status==0,Customer_Info.role==1).all()
     prof_obj=Professional_Info.query.get(prof_id)
     return render_template("search_based_cust.html",customers=cust_obj,prof_obj=prof_obj)
 
@@ -431,8 +429,6 @@ def customer_dashboard(cust_id):
     cust_obj=Customer_Info.query.get(cust_id)
     serv_req=Service_Request.query.filter_by(customer_id=cust_id).all()
     service_obj=Service.query.all()
-    service_dict={service.id:service for service in Service.query.all()}
-    prof_dict={prof.id:prof for prof in Professional_Info.query.all()}
     return render_template("customer_dashboard.html",prof_dict=prof_dict,serv_dict=service_dict,serv_req=serv_req,cust_obj=cust_obj,serv_obj=service_obj)
 
 #Best services for Customer from each card
@@ -471,8 +467,6 @@ def closing_req(req_id):
     req_obj=Service_Request.query.get(req_id)
     cust_id=req_obj.customer_id
     cust_obj=Customer_Info.query.get(cust_id)
-    service_dict={service.id:service for service in Service.query.all()}
-    prof_dict={prof.id:prof for prof in Professional_Info.query.all()}
     if request.method=="POST":
         rating=request.form.get('rating')
         remark=request.form.get('remark')
@@ -482,6 +476,17 @@ def closing_req(req_id):
         if remark:
             req_obj.remarks=remark
         db.session.commit()
+        prof_id=req_obj.professional_id
+        ser_req_list=Service_Request.query.filter_by(professional_id=prof_id).all()
+        if ser_req_list !=[]:
+            rating_list=[]
+            for req in ser_req_list:
+                if req.rating != 0:
+                    rating_list.append(int(req.rating))
+            if len(rating_list) != 0:
+                rating=sum(rating_list)/len(rating_list)
+                prof_dict[prof_id].rating=rating
+                db.session.commit()
         return redirect(url_for('customer_dashboard',cust_id=cust_id))
     return render_template('service_remark.html',cust_obj=cust_obj,req_obj=req_obj,prof_dict=prof_dict,serv_dict=service_dict)
 
@@ -491,12 +496,11 @@ def edit_req_date(req_id):
     req_obj=Service_Request.query.get(req_id)
     cust_id=req_obj.customer_id
     cust_obj=Customer_Info.query.get(cust_id)
-    service_dict={service.id:service for service in Service.query.all()}
-    prof_dict={prof.id:prof for prof in Professional_Info.query.all()}
     if request.method=="POST":
         new_date=datetime.strptime(request.form.get('date'),'%Y-%m-%d').date()
         req_obj.service_date=new_date
         db.session.commit()
+        return redirect(url_for('customer_dashboard',cust_id=cust_id))
     return render_template("edit_req.html",req_obj=req_obj,service_dict=service_dict,prof_dict=prof_dict,cust_obj=cust_obj)
 
 #Edit closed service request by customer
@@ -505,14 +509,24 @@ def edit_closed_req(req_id):
     req_obj=Service_Request.query.get(req_id)
     cust_id=req_obj.customer_id
     cust_obj=Customer_Info.query.get(cust_id)
-    service_dict={service.id:service for service in Service.query.all()}
-    prof_dict={prof.id:prof for prof in Professional_Info.query.all()}
     if request.method=="POST":
         new_rating=request.form.get('rating')
         new_remark=request.form.get('remark')
         req_obj.remarks=new_remark
         req_obj.rating=new_rating
         db.session.commit()
+        prof_id=req_obj.professional_id
+        ser_req_list=Service_Request.query.filter_by(professional_id=prof_id).all()
+        if ser_req_list !=[]:
+            rating_list=[]
+            for req in ser_req_list:
+                if req.rating != 0:
+                    rating_list.append(int(req.rating))
+            if len(rating_list) != 0:
+                rating=sum(rating_list)/len(rating_list)
+                prof_dict[prof_id].rating=rating
+                db.session.commit()
+        return redirect(url_for('customer_dashboard',cust_id=cust_id))
     return render_template("edit_closed_req.html",req_obj=req_obj,service_dict=service_dict,prof_dict=prof_dict,cust_obj=cust_obj)
 
 #To see the customer's profile by customer to edit
@@ -574,7 +588,6 @@ def service_details_cust(ser_name,cust_id):
 def loc_profs(loc,cust_id):
     prof_objs=Professional_Info.query.filter(Professional_Info.address==loc,Professional_Info.profile_status==1,Professional_Info.blocked_status==0).all()
     cust_obj=Customer_Info.query.get(cust_id)
-    service_dict={service.id:service for service in Service.query.all()}
     return render_template("search_based_prof.html",professionals=prof_objs,cust_obj=cust_obj,service_dict=service_dict)
 
 #for pincode based search by customers by professionals
@@ -582,7 +595,6 @@ def loc_profs(loc,cust_id):
 def pin_profs(pin,cust_id):
     prof_objs=Professional_Info.query.filter(Professional_Info.pin_code==pin,Professional_Info.profile_status==1,Professional_Info.blocked_status==0).all()
     cust_obj=Customer_Info.query.get(cust_id)
-    service_dict={service.id:service for service in Service.query.all()}
     return render_template("search_based_prof.html",professionals=prof_objs,cust_obj=cust_obj,service_dict=service_dict)
 
 #for summary to customer

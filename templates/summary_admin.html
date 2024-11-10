@@ -21,7 +21,7 @@
                     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#home">Home</a>
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('admin_dashboard')}}">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('search_tab_admin')}}">Search</a>
@@ -73,7 +73,7 @@
         </script>
 
 <!-- For doughnut chart -->
-        <h2 style="text-align: center;">Rating Count</h2>
+        <h2 style="text-align: center;">Service Rating Count</h2>
         <div style="width: 500px; margin: auto;">
             <canvas id="RatingChart"></canvas> 
         </div>

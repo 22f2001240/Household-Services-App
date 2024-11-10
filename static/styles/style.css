@@ -31,7 +31,7 @@
 .container-box {
     padding: 20px;
     background-color: #f3f3f3; 
-    border: 2px solid #bc9c9c;
+    border: 2px solid #ffffff;
     border-radius: 10px;
     margin-top: 30px;
     margin-left: 30px;
@@ -43,12 +43,10 @@
 .container-box2 {
     padding: 20px;
     background-color: #e9eef2; /* Light grey background */
-    border: 2px solid #bc9c9c; /* Light grey border */
+    border: 2px solid #fbfbfb; /* Light grey border */
     border-radius: 10px;
-    margin-top: 120px;
-    margin-left: 150px;
-    margin-right: 150px;
-    margin-bottom: 50px;
+   margin: auto;
+   margin-top: 8%;
 }
 
 /* Hide all sections by default */
@@ -66,31 +64,15 @@ body:not(:has(:target)) #home {
     display: block;
 }
 
-
-.bg{
-    background: linear-gradient(135deg,#b882d7, #d7dad7 );
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.bg2{
-    background: linear-gradient(135deg,#b882d7, #d7dad7 );
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-}
-
-.signup-form {
+.signup {
     max-width: 500px;
     margin: 50px auto;
     padding: 20px;
-    background-color:#f6f1f1;
+    background-color: #afedf6;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-.signup-form h2 {
+.signup h2 {
     text-align: center;
     margin-bottom: 20px;
     color: #333;
@@ -104,12 +86,13 @@ body:not(:has(:target)) #home {
     font-size: large;
 }
 
-.login-container {
-    max-width: 800px;
-    width: 100%;
-    padding: 90px;
+.login {
+    max-width: 400px;
+    padding: 60px;
     border-radius: 10px;
-    background: #fcecf8;
+    margin-top: 100px;
+    margin-left: 30%;
+    background: #afedf6;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 

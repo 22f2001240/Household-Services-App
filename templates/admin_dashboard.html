@@ -5,11 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin Dashboard</title>
         <link rel="stylesheet" href="static\styles\style.css">
-        <link rel="stylesheet" href="static\styles\dropdown.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     </head>
     <body>
-<!-- Full-width navbar with light pink background and bold black buttons -->
         <div class="container-fluid" style="background-color: #ffcccb; padding: 10px;">
             <nav class="navbar navbar-expand-lg navbar-light w-100">
                 <div class="container-fluid">
@@ -46,7 +44,7 @@
                 <table class="table table-dark table-striped" style="text-align: center;">
                     <thead>
                         <tr>
-                            <th scope="col">ID</th>
+                            <th scope="col">Service ID</th>
                             <th scope="col">Service Name</th>
                             <th scope="col">Base Price</th>
                             <th scope="col">Action</th>
@@ -67,56 +65,56 @@
                     </tbody>
                 </table>
                 <div style="display: flex; justify-content: right;">
-                    <a href="/add_service" class="badge bg-dark">+ New Service</a> <!--new page opened (new_service.html) for entering the new service details-->
+                    <a href="/add_service" class="badge bg-dark">+ New Service</a>
                 </div>
             </div>
         <!-- professional table -->
             {% if prof_list != [] %}
-            <div class="container-box">
-                <h2>Professionals</h2>
-                <table class="table table-dark table-striped" style="text-align: center;">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Email-ID</th>
-                            <th scope="col">Experience(Years)</th>
-                            <th scope="col">Service Name</th>
-                            <th scope="col">Service Name</th>
-                            <th scope="col" >Action</th>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for prof in prof_list %}
+                <div class="container-box">
+                    <h2>Professionals</h2>
+                    <table class="table table-dark table-striped" style="text-align: center;">
+                        <thead>
                             <tr>
-                                <th scope="row"><a href="{{url_for('professional',prof_id=prof.id)}}">{{prof.id}} </a></th>
-                                <td>{{prof.full_name}}</td>
-                                <td>{{prof.email_id}}</td>
-                                <td>{{prof.experience}}</td>
-                                <td>{{service_dict[prof.service_id].name}}</td>
-                                <td><a href="/display_file/{{prof.proof_doc}}">{{prof.proof_doc}}</a></td>
-                                {% if prof.profile_status == 0 and prof.blocked_status == 0 %}
-                                <td>
-                                    <a type="button" href="{{ url_for('approve_prof',prof_id=prof.id) }}" class="badge bg-success">Approve</a>
-                                    <a type="button" href="{{ url_for('reject_prof',prof_id=prof.id) }}" class="badge bg-danger">Reject</a>
-                                    <a type="button" href="{{ url_for('block_prof',prof_id=prof.id) }}" class="badge bg-warning">Block</a>
-                                </td>
-                                 
-                                {% elif prof.profile_status == 1 and prof.blocked_status == 0 %}
-                                <td>
-                                    <a type="button" href="{{ url_for('block_prof',prof_id=prof.id) }}" class="badge bg-dark">Block</a>
-                                </td>
-                                {% else %}
-                                <td>
-                                    <a type="button" href="{{ url_for('unblock_prof',prof_id=prof.id) }}" class="badge bg-light text-dark">Un Block</a>
-                                </td>
-                                {% endif %}
+                                <th scope="col"> Professional ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email-ID</th>
+                                <th scope="col">Experience(Years)</th>
+                                <th scope="col">Service Name</th>
+                                <th scope="col">Service Name</th>
+                                <th scope="col" >Action</th>
+                                </th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {% for prof in prof_list %}
+                                <tr>
+                                    <th scope="row"><a href="{{url_for('professional',prof_id=prof.id)}}">{{prof.id}} </a></th>
+                                    <td>{{prof.full_name}}</td>
+                                    <td>{{prof.email_id}}</td>
+                                    <td>{{prof.experience}}</td>
+                                    <td>{{service_dict[prof.service_id].name}}</td>
+                                    <td><a href="/display_file/{{prof.proof_doc}}">{{prof.proof_doc}}</a></td>
+                                    {% if prof.profile_status == 0 and prof.blocked_status == 0 %}
+                                    <td>
+                                        <a type="button" href="{{ url_for('approve_prof',prof_id=prof.id) }}" class="badge bg-success">Approve</a>
+                                        <a type="button" href="{{ url_for('reject_prof',prof_id=prof.id) }}" class="badge bg-danger">Reject</a>
+                                        <a type="button" href="{{ url_for('block_prof',prof_id=prof.id) }}" class="badge bg-warning">Block</a>
+                                    </td>
+                                    
+                                    {% elif prof.profile_status == 1 and prof.blocked_status == 0 %}
+                                    <td>
+                                        <a type="button" href="{{ url_for('block_prof',prof_id=prof.id) }}" class="badge bg-dark">Block</a>
+                                    </td>
+                                    {% else %}
+                                    <td>
+                                        <a type="button" href="{{ url_for('unblock_prof',prof_id=prof.id) }}" class="badge bg-light text-dark">Un Block</a>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% else %}
                 <div class="container-box">
                     <h2>Professionals</h2>
@@ -133,25 +131,106 @@
                             </tr>
                         </thead>
                         <tbody>
-                                <tr>
-                                    <th scope="row"><a href="#">---</a></th>
-                                    <td>---</td>
-                                    <td>---</td>
-                                    <td>---</td>
-                                    <td>---</td>
-                                    <td>---</td>
-                                </tr>
+                            <tr>
+                                <th scope="row"><a href="#">---</a></th>
+                                <td>---</td>
+                                <td>---</td>
+                                <td>---</td>
+                                <td>---</td>
+                                <td>---</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             {% endif %}
-        </div>
 
-<!-- for summary statistical charts -->
-        <div id="summary" class="content-section">
-            <h1>Overall Customer Ratings</h1>
-            <h1>Service Request Summary</h1>
+            {% if req_objs != [] %}
+                <div class="container-box">
+                    <h2> Service Requests </h2><br>
+                    <table class="table table-dark table-striped" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <th scope="col"> Request ID</th>
+                                <th scope="col">Requested Customer</th>
+                                <th scope="col">Assigned Professional</th>
+                                <th scope="col">Requested Date</th>
+                                <th scope="col">Service Scheduled for</th>
+                                <th scope="col">Status</th>
+                                {% if req_objs[0].service_status == 3 %}
+                                <th scope="col">Rating</th>
+                                <th scope="col">Remarks</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in req_objs %}
+                                <tr>
+                                    <td>{{request.id}} </td>
+                                    <td>{{customers[request.customer_id].full_name}} </td>
+                                    <td>{{professionals[request.professional_id].full_name}} </td>
+                                    <td>{{request.date_of_request.strftime('%Y-%m-%d')}}</td>
+                                    <td>{{request.service_date}}</td>
+                                    <td>
+                                        {% if request.service_status==0 %}
+                                            Requested
+                                        {% elif request.service_status==1 %}
+                                            Accepted
+                                        {% elif request.service_status==2 %}
+                                            Rejected
+                                        {% elif request.service_status==3 %}
+                                            Closed
+                                        {% endif %}
+                                        </td>
+                                    {% if req_objs[0].service_status == 3 %}
+                                        <td>
+                                            {% if request.rating ==1 %}
+                                                <p style="color: rgb(232, 232, 25);font-size: 20px;">★</p>
+                                            {% elif request.rating ==2 %}
+                                                <p style="color: rgb(232, 232, 25);font-size: 20px;">★★</p>
+                                            {% elif request.rating ==3 %}
+                                                <p style="color: rgb(232, 232, 25);font-size: 20px;">★★★</p>
+                                            {% elif request.rating ==4 %}
+                                                <p style="color: rgb(232, 232, 25);font-size: 20px;">★★★★</p>
+                                            {% elif request.rating ==5 %}
+                                                <p style="color: rgb(232, 232, 25);font-size: 20px;">★★★★★</p>
+                                            {% else %}
+                                                <p>None</p>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{request.remarks}} </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+            <div class="container-box">
+                <h2> Service Requests </h2><br>
+                <table class="table table-dark table-striped" style="text-align: center;">
+                    <thead>
+                        <tr>
+                            <th scope="col"> Request ID</th>
+                            <th scope="col">Requested Customer</th>
+                            <th scope="col">Assigned Professional</th>
+                            <th scope="col">Requested Date</th>
+                            <th scope="col">Service Scheduled for</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row"><a href="#">---</a></th>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>---</td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+            {% endif %}
         </div>
+        
     </body>
 </html>
 

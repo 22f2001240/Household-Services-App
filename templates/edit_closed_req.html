@@ -36,7 +36,8 @@
                 </div>
             </nav>
         </div>
-        <div class="container-box2" >
+        <div style="padding-left: 5%;padding-right: 5%;padding-bottom: 5%;">
+        <div class="container-box2" style="width: 80%;">
             <h2 style="text-align: center;">Edit service Request : {{req_obj.id}} </h2><br>
             <form action="/edit_closed_req/{{req_obj.id}}" method="POST">
                 <div class="input-group" >
@@ -71,6 +72,7 @@
                     <button type="submit" style="text-align: center;align-items: center;" class="btn btn-primary" style="width: 170px;">Save Changes</button>
                 </div>
             </form>
+        </div>
         </div>
     </body>
 </html>
