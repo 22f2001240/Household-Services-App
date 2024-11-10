@@ -31,7 +31,6 @@ class Professional_Info(db.Model):
     pin_code=db.Column(db.Integer,nullable=False)
     service_id=db.Column(db.Integer,db.ForeignKey("service.id"))
     rating=db.Column(db.Integer,default=0)
-    price=db.Column(db.Integer,nullable=True)
     profile_status=db.Column(db.Integer,default=0) #not accepted yet=0 ,accepted=1
     blocked_status=db.Column(db.Integer,default=0) #not blocked=0, 1-blocked
     service_requests=db.relationship("Service_Request",cascade="all,delete",backref="professional_info",lazy=True)

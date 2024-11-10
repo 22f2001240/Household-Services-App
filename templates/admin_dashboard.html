@@ -93,7 +93,7 @@
                                     <td>{{prof.email_id}}</td>
                                     <td>{{prof.experience}}</td>
                                     <td>{{service_dict[prof.service_id].name}}</td>
-                                    <td><a href="/display_file/{{prof.proof_doc}}">{{prof.proof_doc}}</a></td>
+                                    <td>{{prof.proof_doc}}</td>
                                     {% if prof.profile_status == 0 and prof.blocked_status == 0 %}
                                     <td>
                                         <a type="button" href="{{ url_for('approve_prof',prof_id=prof.id) }}" class="badge bg-success">Approve</a>
@@ -151,7 +151,8 @@
                         <thead>
                             <tr>
                                 <th scope="col"> Request ID</th>
-                                <th scope="col">Requested Customer</th>
+                                <th scope="col">Requested Customer ID</th>
+                                <th scope="col">Requested Customer Name</th>
                                 <th scope="col">Assigned Professional</th>
                                 <th scope="col">Requested Date</th>
                                 <th scope="col">Service Scheduled for</th>
@@ -166,6 +167,7 @@
                             {% for request in req_objs %}
                                 <tr>
                                     <td>{{request.id}} </td>
+                                    <td><a href="{{url_for('cust_profile_admin',cust_id=request.customer_id)}}">{{request.customer_id}} </a></td>
                                     <td>{{customers[request.customer_id].full_name}} </td>
                                     <td>{{professionals[request.professional_id].full_name}} </td>
                                     <td>{{request.date_of_request.strftime('%Y-%m-%d')}}</td>

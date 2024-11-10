@@ -22,10 +22,10 @@
                                 <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('customer_dashboard',cust_id=cust_obj.id)}}">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('search_tab_admin')}}">Search</a>
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('search_tab_cust',cust_id=cust_obj.id)}}">Search</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#summary">Summary</a>
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('summary_customer',cust_id=cust_obj.id)}}">Summary</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="/">Logout</a>
@@ -73,6 +73,6 @@
                         {% endfor %}
                 </table>
             {% else %}
-                <h2> Coming soon ...</h2>
+                <h2 style="text-align: center;"> Sorry ! Currently no professionals are available.</h2>
             {% endif %}
         </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Professional Profile</title>
+    <title>Admin Dashboard - Customer Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .card {
@@ -52,20 +52,25 @@
             </nav>
         </div>
         <div class="card" style="width:400px;font-size: 20px; ">
-            <h1>{{prof.full_name}}</h1><br>
+            <h1>{{cust.full_name}}</h1><br>
             <div >
-                <p>Professional ID : {{prof.id}}</p>
-                <p>Service Name : {{name}}</p>
-                <p>Email-ID : {{prof.email_id}}</p>
-                <p>Experience : {{prof.experience}}</p>
-                <p>Address : {{prof.address}}</p>
-                <p>Pin Code : {{prof.pin_code}}</p>
-                {% if prof.rating==0 %}
-                    <p>Rating : None</p>
-                {% else %}
-                    <p>Rating : {{prof.rating}}</p>
-                {% endif %}
-                <p>Profile Status : {% if prof.profile_status==0 and prof.blocked_status==0 %} <span style="color: rgb(27, 43, 215);"> Not Yet Approved </span> {% elif prof.profile_status==1 and prof.blocked_status==0 %} <span style="color: rgb(26, 167, 43);"> Active Account </span> {% else %} <span style="color: rgb(233, 30, 30);">Blocked {% endif %}</span></p>
+                <p>Professional ID : {{cust.id}}</p>
+                <p>Email-ID : {{cust.email_id}}</p>
+                <p>Experience : {{cust.phone_number}}</p>
+                <p>Address : {{cust.address}}</p>
+                <p>Pin Code : {{cust.pin_code}}</p>
+                <p>Profile Status : {% if cust.blocked_status==0 %} <span style="color:  rgb(26, 167, 43);"> Active </span> {% elif cust.blocked_status==1 %} <span style="color: rgb(233, 30, 30);"> Blocked </span>{% endif %}</p>
+                <p>
+                    {% if cust.blocked_status == 0 %}
+                        <td>
+                            <a type="button" href="{{ url_for('block_cust',cust_id=cust.id) }}" class="badge bg-dark">Block</a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a type="button" href="{{ url_for('unblock_cust',cust_id=cust.id) }}" class="badge bg-light text-dark">Un Block</a>
+                        </td>
+                    {% endif %}
+                </p>
             </div>
         </div>
     </body>

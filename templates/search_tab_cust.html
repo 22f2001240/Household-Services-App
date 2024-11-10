@@ -24,7 +24,7 @@
                                 <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('search_tab_cust',cust_id=cust_obj.id)}}">Search</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#">Summary</a>
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('summary_customer',cust_id=cust_obj.id)}}">Summary</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="/">Logout</a>
@@ -72,7 +72,7 @@
                         </ul>
                     {% endif %}
                 {% else %}
-                    <h2>No Suggestions</h2>
+                    <h4>No Suggestions</h4>
                 {% endif %}
             </div>
         </div>

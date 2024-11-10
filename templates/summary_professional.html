@@ -21,7 +21,7 @@
                     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="#home">Home</a>
+                                <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('professional_dashboard',prof_id=prof_obj.id)}}">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link btn btn-dark mx-2 text-white fw-bold" href="{{url_for('search_tab_prof',prof_id=prof_obj.id)}}">Search</a>
@@ -75,7 +75,7 @@
                 }
             });
         </script>
-        <h2 style="margin-left: 300px; color: rgb(45, 113, 31);margin-top: 80px;">Survice Ratings </h2>
+        <h2 style="margin-left: 300px; color: rgb(45, 113, 31);margin-top: 80px;">Service Ratings </h2>
         <div style="width: 800px; margin: auto;">
             <canvas id="SurviceRatings"></canvas>
         </div>

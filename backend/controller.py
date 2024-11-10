@@ -9,6 +9,20 @@ def home():
     service_obj=Service.query.all()
     return render_template("index.html",service_obj=service_obj)
 
+#For Admin
+@app.route("/alogin",methods=["GET","POST"])
+def alogin():
+    err_msg=""
+    if request.method=="POST":
+        email_id=request.form.get("user_name")
+        pwd=request.form.get("password")
+        user_obj=Customer_Info.query.filter_by(email_id=email_id,password=pwd).first()
+        if user_obj and user_obj.role==0:
+            return  redirect("/admin_dashboard")                    
+        else:
+            err_msg="Invalid Login !! Please enter a valid information"
+    return render_template("admin_login.html",err_msg=err_msg)
+
 #For User
 @app.route("/clogin",methods=["GET","POST"])
 def clogin():
@@ -17,14 +31,11 @@ def clogin():
         email_id=request.form.get("user_name")
         pwd=request.form.get("password")
         user_obj=Customer_Info.query.filter_by(email_id=email_id,password=pwd).first()
-        if user_obj:
-            if user_obj.role==0:
-                return  redirect("/admin_dashboard")                    
-            elif user_obj.role==1:
-                if user_obj.blocked_status == 1:
-                    err_msg="Sorry .You have been knocked Out !!"
-                    return render_template("customer_login.html",err_msg=err_msg)
-                return redirect(url_for('customer_dashboard',cust_id=user_obj.id))
+        if user_obj and user_obj.role==1:
+            if user_obj.blocked_status == 1:
+                err_msg="Sorry .You have been knocked Out !!"
+                return render_template("customer_login.html",err_msg=err_msg)
+            return redirect(url_for('customer_dashboard',cust_id=user_obj.id))
         err_msg="Invalid Login !! Please enter a valid information"
     return render_template("customer_login.html",err_msg=err_msg)
 
@@ -156,14 +167,6 @@ def service_request(service_id):
     prof_dict={prof_obj.id:prof_obj for prof_obj in Professional_Info.query.all()}
     return render_template("service_request.html",serv_name=serv_name,customer=cust_dict,service_requests=service_requests,professionals=prof_dict)
 
-#Display the file
-@app.route('/display_file/<filename>')
-def display_file(filename):
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    with open(file_path, 'r',encoding='UTF-32') as f:
-        file_content = f.read()
-    return render_template('display_file.html', content=file_content, filename=filename)
-
 #approve a professional's request by admin
 @app.route('/approve_prof/<int:prof_id>')
 def approve_prof(prof_id):
@@ -188,7 +191,7 @@ def block_prof(prof_id):
     db.session.commit()
     return redirect("/admin_dashboard")
 
-#UnBlock a professional by admin 
+#UnBlock a professional's by admin 
 @app.route('/unblock_prof/<int:prof_id>')
 def unblock_prof(prof_id):
     prof_obj=Professional_Info.query.get(prof_id)
@@ -203,6 +206,28 @@ def professional(prof_id):
     service=Service.query.filter_by(id=professional.service_id).first()
     service_name=service.name
     return render_template("prof_profile(admin).html",prof=professional,name=service_name)
+
+#For each customer's view by admin
+@app.route('/cust_profile_admin/<int:cust_id>')
+def cust_profile_admin(cust_id):
+    cust_obj=Customer_Info.query.get(cust_id)
+    return render_template("cust_profile(admin).html",cust=cust_obj)
+
+#Block a customer by admin 
+@app.route('/block_cust/<int:cust_id>')
+def block_cust(cust_id):
+    cust_obj=Customer_Info.query.get(cust_id)
+    cust_obj.blocked_status=1
+    db.session.commit()
+    return redirect("/admin_dashboard")
+
+#UnBlock a custome by admin 
+@app.route('/unblock_cust/<int:cust_id>')
+def unblock_cust(cust_id):
+    cust_obj=Customer_Info.query.get(cust_id)
+    cust_obj.blocked_status=0
+    db.session.commit()
+    return redirect("/admin_dashboard")
 
 #Search tab for admin
 @app.route('/search_tab_admin',methods=['GET','POST'])
@@ -314,7 +339,7 @@ def professional_dashboard(prof_id):
             db.session.commit()
         return render_template("professional_dashboard.html",closedreq_list=closedreq_list,prof_obj=prof_obj,req_list=req_list,cust_dict=cust_dict,service_dict=service_dict)
 
-    return render_template("professional_dashboard.html",prof_obj=prof_obj)
+    return render_template("professional_dashboard.html",prof_obj=prof_obj,service_dict=service_dict)
 
 #To see the professional's profile by professional to edit
 @app.route('/prof_profile/<int:prof_id>',methods=['GET','POST'])
@@ -339,7 +364,7 @@ def prof_profile(prof_id):
         prof_obj.address=adrs
         prof_obj.pin_code=pin
         db.session.commit()
-        return render_template("professional_profile.html",prof_obj=prof_obj,service_dict=service_dict,msg='Succefully Saved')
+        return render_template("professional_profile.html",prof_obj=prof_obj,service_dict=service_dict,msg='Successfully Saved')
     return render_template("professional_profile.html",prof_obj=prof_obj,service_dict=service_dict,msg="")
 
 #Accept the service request
@@ -561,7 +586,7 @@ def cust_profile(cust_id):
         cust_obj.address=adrs
         cust_obj.pin_code=pin
         db.session.commit()
-        msg='Succefully Saved'
+        msg='Successfully Saved'
     return render_template("customer_profile.html",cust_obj=cust_obj,msg=msg)
 
 #Search tab for customer
