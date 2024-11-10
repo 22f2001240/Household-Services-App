@@ -55,6 +55,7 @@ class Service_Request(db.Model):
     professional_id=db.Column(db.Integer,db.ForeignKey("professional_info.id"),nullable=False)
     date_of_request=db.Column(db.DateTime, default=datetime.now)
     service_date=db.Column(db.Date)
+    service_description=db.Column(db.String,nullable=False)
     service_status=db.Column(db.Integer,default=0) # requested from cust=>0 ACCEPTED by prof=>1 reject by prof =>2 CLOSED by cust=>3
     remarks=db.Column(db.String,nullable=True)
     rating=db.Column(db.Integer,default=0) #0 means no rating

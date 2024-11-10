@@ -50,6 +50,11 @@
                             <th scope="col">Customer Name</th>
                             <th scope="col">Contact Number</th>
                             <th scope="col">Location(with pin code)</th>
+                            <th scope="col">Customer Note</th>
+                            <th scope="col">Requested Date</th>
+                            <th scope="col">Requested For</th>
+                            <th scope="col">Base Price</th>
+                            
                             <th scope="col" >Action</th>
                         </tr>
                     </thead>
@@ -62,6 +67,10 @@
                                     <td>{{cust.full_name}}</td>
                                     <td>{{cust.phone_number}}</td>
                                     <td>{{cust.address}},{{cust.pin_code}}</td>
+                                    <td>{{req.service_description}}</td>
+                                    <td>{{req.date_of_request.strftime('%Y-%m-%d')}}</td>
+                                    <td>{{req.service_date}}</td>
+                                    <td>{{service_dict[req.service_id].basic_price}} ₹</td>
                                     <td>
                                         <a href="{{url_for('accept_req',req_id=req.id,prof_id=prof_obj.id)}}" type="button" class="badge bg-success">Accept</a>
                                         <a href="{{url_for('reject_req',req_id=req.id,prof_id=prof_obj.id)}}" class="badge bg-danger">Reject</a>
@@ -75,7 +84,10 @@
                                 <td>----</td>
                                 <td>----</td>
                                 <td>----</td>
-                                
+                                <td>----</td>
+                                <td>----</td>
+                                <td>----</td>
+                                <td>----</td>
                             </tr>   
                         {% endif %}
                     </tbody>
@@ -136,6 +148,25 @@
                                 <td>----</td>
                             </tr>   
                         {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="container-box">
+                <h2>Your Service Details</h2>
+                <table class="table table-dark table-striped" style="text-align: center;">
+                    <thead>
+                        <tr>
+                            <th scope="col">Service Name</th>
+                            <th scope="col">Service Base Price</th>
+                            <th scope="col">Service Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th >{{service_dict[prof_obj.service_id].name}}</th>
+                            <th >{{service_dict[prof_obj.service_id].basic_price}}</th>
+                            <th >{{service_dict[prof_obj.service_id].Description}}</th>
+                        </tr>
                     </tbody>
                 </table>
             </div>

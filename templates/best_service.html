@@ -44,6 +44,7 @@
                         <th scope="col">Professional Name</th>
                         <th scope="col">Location</th>
                         <th scope="col">Rating</th>
+                        <th scope="col">Base Price</th>
                         <th scope="col">Service Description</th>
                         <th scope="col"></th>
                         </tr>
@@ -62,6 +63,7 @@
                                         {{prof.rating}}
                                     {% endif %}
                                 </td>
+                                <td>{{serv_obj.basic_price}} ₹</td>
                                 <td>{{serv_obj.Description}}</td>
                                 <td>
                                     <a href="{{url_for('book_service',serv_id=serv_obj.id,prof_id=prof.id,cust_id=cust_obj.id)}}" type="button" class="btn btn-success">Book</a>

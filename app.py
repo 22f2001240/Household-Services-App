@@ -16,4 +16,5 @@ setup_app()
 from backend.controller import *  #take eerything from controller. controller used to divide the length of the app file. can splits common routes etc in controller
 
 if __name__=="__main__":
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
