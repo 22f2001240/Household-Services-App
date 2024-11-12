@@ -91,7 +91,7 @@ body:not(:has(:target)) #home {
     padding: 60px;
     border-radius: 10px;
     margin-top: 100px;
-    margin-left: 30%;
+    margin-left: 35%;
     background: #afedf6;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
@@ -111,21 +111,21 @@ body:not(:has(:target)) #home {
 
 /* Text color and font size */
 .text-box h2 {
-    font-size: 2em;         /* Adjust as needed */
-    color: #161709;            /* Dark color for main heading */
-    font-weight: bold;      /* Make heading bold */
+    font-size: 2em;         
+    color: #161709;          
+    font-weight: bold;     
 }
 
 .text-box p {
-    font-size: 1.1em;       /* Slightly larger paragraph text */
-    color: #3a0404;            /* Medium color for paragraph text */
-    line-height: 1.6;       /* Increase line spacing for readability */
+    font-size: 1.1em;       
+    color: #3a0404;           
+    line-height: 1.6;       /* line spacing for readability */
 }
 
 /* Center and surrounding images */
 .image-circle-container {
     position: relative;
-    width: 300px; /* Adjust based on desired size */
+    width: 300px; 
     height: 300px;
     margin: 0 auto;
 }
